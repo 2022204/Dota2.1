@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %} REGISTER PAGE {% endblock %}
+
+{% block body %}
+
+<div class="wrapper">
+                <form action="/register" method = "post">
+                    <h1>LOGIN</h1>
+                    <div class="input-box">
+                        <input type ="text" placeholder="Username" name = "username" required>
+                        <i class='bx bxs-user'></i>
+                    </div>
+
+                    <div class="input-box">
+                        <input type ="password" placeholder="Password" password = "password" required>
+                        <i class='bx bxs-lock-alt' ></i>
+                    </div>
+                    
+                    <div class="input-box">
+                        <input type ="password" placeholder="Confirmation" confirmation = "confirmation" required>
+                        <i class='bx bxs-lock-alt' ></i>
+                    </div>
+                    
+                    <button type="submit" class="btn">Register</button>
+                </form>
+
+
+{% endblock %}

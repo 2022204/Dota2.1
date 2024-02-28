@@ -18,9 +18,12 @@ def hashed_password(password):
         if i.isupper():
             index = alphabets.index(i.lower())
             new_password += mapped[index].upper()
-        else:
+        elif i.lower():
             index = alphabets.index(i)
             new_password += mapped[index]
+        
+        else:
+            new_password += i
 
     return new_password
             

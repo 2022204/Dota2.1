@@ -2,8 +2,9 @@ from flask import Flask, render_template, session, url_for, redirect, request
 from helper import checkuser, hashed_password
 app = Flask(__name__)
 
-users = [{"username":"hasan","password":"qweRTY"},
+users = [{"username":"hasan","password":"qwe"},
          {"username":"ali","password":"123123"}]
+
 @app.route('/', methods = ["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -11,6 +12,8 @@ def login():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
+
+        print(username, password)
 
         if not username:
             return render_template("Apology.html", message = "Must enter username")
@@ -49,6 +52,6 @@ def register():
 @app.route("/index.html",methods = ["GET","POST"])
 def index():
     """First page"""
-    return "Index.html"
+    return render_template("index.html", message = "LOGGED IN SUCCESSFULLY")
 if __name__ == "__main__":
     app.run(debug = True)
