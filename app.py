@@ -25,7 +25,7 @@ def login():
             if message != None:
                 return render_template("Apology.html", message= message)
             else:
-                return render_template("index.html")
+                return render_template("index.html", username = username, password = hash)
         
 @app.route('/register', methods = ["GET","POST"])
 def register():
@@ -46,12 +46,13 @@ def register():
         else:
             hash = hashed_password(password)
             users.append({"username":username, "password":hash})
-            return render_template("index.html")
+            return render_template("index.html", username = username, password = hash)
+
         
 
 @app.route("/index.html",methods = ["GET","POST"])
 def index():
     """First page"""
-    return render_template("index.html", message = "LOGGED IN SUCCESSFULLY")
+    return render_template("index.html")
 if __name__ == "__main__":
     app.run(debug = True)

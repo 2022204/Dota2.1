@@ -15,12 +15,13 @@ def hashed_password(password):
     alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     new_password = ""
     for i in password:
-        if i.isupper():
-            index = alphabets.index(i.lower())
-            new_password += mapped[index].upper()
-        elif i.lower():
-            index = alphabets.index(i)
-            new_password += mapped[index]
+        if i.isalpha():
+            if i.isupper():
+                index = alphabets.index(i.lower())
+                new_password += mapped[index].upper()
+            elif i.lower():
+                index = alphabets.index(i)
+                new_password += mapped[index]
         
         else:
             new_password += i
