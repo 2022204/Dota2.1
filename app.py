@@ -19,9 +19,8 @@ def login():
         else:
             hash = hashed_password(password) 
             message = checkuser(users, username, hash)
-            if message != "None":
+            if message != None:
                 return render_template("Apology.html", message= message)
-            
             else:
                 return render_template("index.html")
         
@@ -41,8 +40,15 @@ def register():
             return render_template("Apology.html", message = "Must Enter confirmation password")
         elif password != confirmation:
             return render_template("Apology.html",message = "Passwords Don't match")
-        
         else:
-            """"""
+            hash = hashed_password(password)
+            users.append({"username":username, "password":hash})
+            return render_template("index.html")
+        
+
+@app.route("/index.html",methods = ["GET","POST"])
+def index():
+    """First page"""
+    return "Index.html"
 if __name__ == "__main__":
     app.run(debug = True)

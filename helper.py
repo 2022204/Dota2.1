@@ -12,14 +12,16 @@ def checkuser(users, username, password):
 def hashed_password(password):
     """This will encrypt user's password"""
     mapped = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m']
+    alphabets = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     new_password = ""
-    for i in range(len(password)):
-        if password[i].isupper():
-            new_password += mapped[i].upper()
+    for i in password:
+        if i.isupper():
+            index = alphabets.index(i.lower())
+            new_password += mapped[index].upper()
         else:
-            new_password += mapped[i]
+            index = alphabets.index(i)
+            new_password += mapped[index]
 
-        
     return new_password
             
 
