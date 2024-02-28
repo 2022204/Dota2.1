@@ -2,8 +2,10 @@ from flask import Flask, render_template, session, url_for, redirect, request
 from helper import checkuser, hashed_password
 app = Flask(__name__)
 
-users = [{"username":"hasan","password":"qwe"},
-         {"username":"ali","password":"123123"}]
+app.secret_key = "dota2.1"
+
+users = [{"username":"hasan","password":"qwe", "value":123},
+         {"username":"ali","password":"123123", "value":10}]
 
 @app.route('/', methods = ["GET", "POST"])
 def login():
@@ -21,11 +23,12 @@ def login():
             return render_template("Apology.html", message = "Must enter Password")
         else:
             hash = hashed_password(password) 
-            message = checkuser(users, username, hash)
+            message, value = checkuser(users, username, hash)
             if message != None:
                 return render_template("Apology.html", message= message)
             else:
-                return render_template("index.html", username = username, password = hash)
+                session["user"] = username   #replace with user_id later
+                return render_template("index.html", username = username, password = hash, value = value)
         
 @app.route('/register', methods = ["GET","POST"])
 def register():
@@ -45,8 +48,9 @@ def register():
             return render_template("Apology.html",message = "Passwords Don't match")
         else:
             hash = hashed_password(password)
-            users.append({"username":username, "password":hash})
-            return render_template("index.html", username = username, password = hash)
+            users.append({"username":username, "password":hash, "value":0})
+            session["user"] = username  #replace with user_id later
+            return render_template("index.html", username = username, password = hash, value = 0)
 
         
 
@@ -54,5 +58,11 @@ def register():
 def index():
     """First page"""
     return render_template("index.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("user",None)
+    return redirect(url_for("login"))
+
 if __name__ == "__main__":
     app.run(debug = True)

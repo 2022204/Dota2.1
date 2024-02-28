@@ -5,9 +5,9 @@ def main():
 def checkuser(users, username, password):
     for i in users:
         if i["username"] == username and i["password"] == password:
-            return None
+            return None, i["value"]
     
-    return "Invalid username/password"
+    return "Invalid username/password", 0
 
 def hashed_password(password):
     """This will encrypt user's password"""
