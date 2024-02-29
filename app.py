@@ -1,14 +1,33 @@
 from flask import Flask, render_template, session, url_for, redirect, request
 from helper import checkuser, hashed_password
+from flask_session import Session
 app = Flask(__name__)
 
-app.secret_key = "dota2.1"
+
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+# db = SQL("sqlite:///game.db")
 
 users = [{"username":"hasan","password":"qwe", "value":123},
          {"username":"ali","password":"123123", "value":10}]
 
+
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+
+
 @app.route('/', methods = ["GET", "POST"])
 def login():
+    session.clear()
     if request.method == "GET":
         return render_template("login.html")
     else:
@@ -61,8 +80,8 @@ def index():
 
 @app.route("/logout")
 def logout():
-    session.pop("user",None)
-    return redirect(url_for("login"))
+    session.clear()
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug = True)
