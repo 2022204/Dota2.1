@@ -11,9 +11,16 @@ Session(app)
 # db = SQL("sqlite:///game.db")
 
 users = [{"username":"hasan","password":"qwe", "value":123},
-         {"username":"ali","password":"123123", "value":10}]
+         {"username":"ali","password":"123123", "value":10},
+         {"username":"Farza","password":"???","value":1234}]
 
+duels = [
+        {'username':'hasan','opponent': 'Murtaza', 'time': '12:00', 'result': 'Won', 'exchange':100},
+        {'username':'hasan','opponent': 'Farza', 'time': '12:30', 'result': 'Lost', 'exchange':-230},
+        {'username':'hasan','opponent': 'Maryam', 'time': '13:00', 'result': 'Won', 'exchange': 102},
+        {'username':'Farza','opponent': 'Hasan', 'time': '12:30', 'result': 'Won', 'exchange': 230},
 
+    ]
 
 @app.after_request
 def after_request(response):
@@ -48,7 +55,8 @@ def login():
                 return render_template("Apology.html", message= message)
             else:
                 session["user"] = username   #replace with user_id later
-                return render_template("index.html", username = username, password = hash, value = value)
+                my_duels = [duel for duel in duels if duel.get('username') == username]
+                return render_template("index.html", username = username, duels = my_duels)
         
 @app.route('/register', methods = ["GET","POST"])
 def register():
@@ -69,15 +77,24 @@ def register():
         else:
             hash = hashed_password(password)
             users.append({"username":username, "password":hash, "value":0})
+            
             session["user"] = username  #replace with user_id later
-            return render_template("index.html", username = username, password = hash, value = 0)
+            my_duels = [duel for duel in duels if duel.get('username') == username]
+            return render_template("index.html", username = username, duels = my_duels)
+
 
         
 
-@app.route("/index.html",methods = ["GET","POST"])
+@app.route("/index")
 def index():
     """First page"""
-    return render_template("index.html")
+    if 'user' not in session or not session.get('user'):
+        return redirect('/')
+    
+    user= session["user"]
+    my_duels = [duel for duel in duels if duel.get('username') == user]
+    return render_template("index.html", username = user, duels = my_duels)
+
 
 @app.route("/logout")
 def logout():
