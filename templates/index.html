@@ -1,11 +1,39 @@
-{% extends "layout.html" %}
+{% extends "layout_index.html" %}
 
-{% block title %} Welcome {{username}}!!!{% endblock %}
+{% block title %} Welcome {{username}}!!! {% endblock %}
 {% block body %}
 
-<h1>User: {{username}}</h1>
-<h1>Password: {{password}}</h1>
-<h1>Value: {{value}}</h1>
-<h2>Logged in</h2>
+<div class="container-fluid">
+    <h1 class="text-center my-4">Welcome {{username}} !!!</h1>
+    
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">You</th>
+                        <th scope="col">vs</th>
+                        <th scope="col">Opponent</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Result</th>
+                        <th scope="col">Gold exchange</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for duel in duels %}
+                    <tr class="{{ 'table-success' if duel.result == 'Won' else 'table-danger' }}">
+                        <td>You</td>
+                        <td>vs</td>
+                        <td>{{ duel.opponent }}</td>
+                        <td>{{ duel.time }}</td>
+                        <td>{{ duel.result }}</td>
+                        <td>{{ duel.exchange }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

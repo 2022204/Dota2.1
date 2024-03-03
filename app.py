@@ -82,9 +82,6 @@ def register():
             my_duels = [duel for duel in duels if duel.get('username') == username]
             return render_template("index.html", username = username, duels = my_duels)
 
-
-        
-
 @app.route("/index")
 def index():
     """First page"""
