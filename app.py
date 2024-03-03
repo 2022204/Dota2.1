@@ -42,6 +42,7 @@ def login():
             return render_template("Apology.html", message = "Must enter Password")
         else:
             hash = hashed_password(password) 
+            # users = db.execute("SELECT * FROM users")
             message, value = checkuser(users, username, hash)
             if message != None:
                 return render_template("Apology.html", message= message)
