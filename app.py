@@ -32,6 +32,9 @@ def handleMsg(msg):
     send(msg, broadcast = True)
     messages.append(msg)
 
+
+
+
 @app.route('/fight')
 def fight():
     return render_template("fight.html", messages = messages)
