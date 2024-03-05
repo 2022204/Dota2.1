@@ -1,13 +1,15 @@
 from flask import Flask, render_template, session, url_for, redirect, request
 from helper import checkuser, hashed_password
 from flask_session import Session
+from flask_socketio import SocketIO, send
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
+socketio = SocketIO(app)
 # db = SQL("sqlite:///game.db")
 
 users = [{"username":"hasan","password":"qwe", "value":123},
@@ -22,6 +24,20 @@ duels = [
 
     ]
 
+messages = []
+
+@socketio.on('message')
+def handleMsg(msg):
+    print('Message: '+msg)
+    send(msg, broadcast = True)
+    messages.append(msg)
+
+
+
+
+@app.route('/fight')
+def fight():
+    return render_template("fight.html", messages = messages)
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -98,5 +114,6 @@ def logout():
     session.clear()
     return redirect("/")
 
+
 if __name__ == "__main__":
-    app.run(host = '0.0.0.0', port = 5000, debug = True)
+    socketio.run(app, host = '0.0.0.0', port = 5000, debug = True)
