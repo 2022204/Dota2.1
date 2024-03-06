@@ -209,3 +209,8 @@ button:hover {
     color: white;
     text-decoration: none;
 }
+
+.login a {
+    color: white;
+    text-decoration: none;
+}
