@@ -11,6 +11,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 socketio = SocketIO(app)
 # db = SQL("sqlite:///game.db")
+# app.config['SQLALCHEMY_DATABASE_URI']='postgres://root:zGTFUyDfAYLsf0avHVLJ5FEl5SiW4TLz@dpg-cnfg40ta73kc7392vfq0-a.oregon-postgres.render.com/dbms_database'
+# db =SQLAlchemy(app)
 
 users = [{"username":"hasan","password":"qwe", "value":123},
          {"username":"ali","password":"123123", "value":10},
@@ -24,7 +26,7 @@ duels = [
 
     ]
 
-messages = []
+# messages = []
 
 @socketio.on('message')
 def handleMsg(msg):
