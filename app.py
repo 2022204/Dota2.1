@@ -26,7 +26,7 @@ duels = [
 
     ]
 
-# messages = []
+messages = []
 
 @socketio.on('message')
 def handleMsg(msg):
