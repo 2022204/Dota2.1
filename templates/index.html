@@ -3,29 +3,6 @@
 {% block title %} Welcome {{username}}!!! {% endblock %}
 
 {% block body %}
-<style>
-    .centered-message {
-        color: white;
-        text-align: center;
-        /* Additional styling to ensure it is centered on the page */
-        position: absolute;
-        width: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    .table-custom {
-    background-color: rgb(219, 107, 107); 
-    color: rgb(254, 254, 254); 
-}
-
-.table-custom thead th {
-    background-color: #f8f9fa; 
-}
-
-.table-custom tbody tr {
-    background-color: white; 
-}
-</style>
 <div class="container-fluid mt-3">
     <h1 class="centered-message">Welcome {{username}} !!!</h1>
     
