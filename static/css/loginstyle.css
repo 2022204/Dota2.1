@@ -1,0 +1,573 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;      /*adjusts its height snd width according to the content*/
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh ;
+    /* background: rgb(52, 52, 52); */
+    background: url('/static/images/bck.jpg') no-repeat;
+    background-size: cover;     /*background image always fits the div*/
+    background-position: center;
+    display: flex;      /*flex property sets your container to be a flexbox element */
+    flex-direction: column;     /*used to set the direction of the flex container's main axis*/
+}
+
+.navbar {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 40px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.logo a{
+    color: white;
+    font-size: 28px;
+    text-decoration: none;
+}
+
+span{
+    color: red;
+}
+
+nav ul li{
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+nav ul li a{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover{
+    color: red;
+    transition: .3s;
+}
+
+button {
+    border: none;
+    background: red;
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    transition: .4s;
+}
+
+button:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+/* -------------- nav bar - end --------------*/
+
+
+
+/* -------------- main page style - start -------------- */
+.content{
+    position: absolute;
+    top: 35%; /*Position the content div vertically in the middle*/
+    /* transform: translateY(-50%); Center the content div vertically-->this feels like not a need */
+}
+
+.content h1{
+    width: 1200px;
+    text-align:left;
+    font-size: 30px;
+    height: auto;
+    margin: auto;
+    color: white;
+    position: relative;
+}
+
+.content span{
+    font-size: 60px;
+    font-family: 'Shojumaru', sans-serif;
+}
+/* -------------- main page style - end -------------- */
+
+
+/* -------------- login page style - start -------------- */
+.wrapper {
+    width: 420px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0,0,0, .2);     /* blur-shadow: [horizontal offset] [vertical offset] [blur radius] */
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 30px 40px;
+    position: absolute;
+    top: 56%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.wrapper h1 {
+    font-size: 36px ;
+    text-align: center;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100% ;
+    height: 50px ;
+    margin: 30px 0 ;
+}
+
+.input-box input {
+    width: 100% ;
+    height: 100% ;
+    background: transparent;
+    border: none ;
+    outline: none;
+    border: 2px solid rgb(255, 255 , 255 , .2);
+    border-radius: 40px ;
+    font-size: 16px;
+    color: white;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: white;
+}
+
+.input-box i{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.wrapper .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+    accent-color: white;
+    margin-right: 3px;
+}
+
+.input-box label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+}
+
+.remember-forgot a {
+    color: white;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: white;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0,0,0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: black;
+    font-size: 600;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+  
+.wrapper h1 {
+  font-size: 30px;
+}
+
+.remember-forgot {
+  margin: 10px 0;
+  font-size: 14.5px;
+}
+
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login a {
+    color: white;
+    text-decoration: none;
+}
+
+/* -------------- login page style - end -------------- */
+
+
+/* .text {
+    position: absolute;
+    top: 35%; 
+    transform: translateY(-50%); 
+} */
+
+
+/* -------------- heros page style - start -------------- */
+
+/* .text {
+    position: relative; 
+    text-align: center; 
+    margin-bottom: 20px; 
+    margin-top: 50px; 
+} */
+
+.text {
+    position: absolute; /* Change to absolute positioning */
+    text-align: center;
+    margin-bottom: 20px;
+    top: 200px; /* Adjust the top value to move the text closer to the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.text h1 {
+    width: 1200px;
+    text-align:center;
+    font-size: 30px;
+    height: auto;
+    margin: auto;
+    color: white;
+    position: relative;
+    font-family: "Galindo", sans-serif;
+    font-size: 50px;
+}
+
+.box {
+    box-sizing: border-box;
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+    position: absolute;
+    top: 330px; /* Adjust this value to move the box closer to the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* .box {
+    box-sizing: border-box;
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;   
+    margin-top: 50px;   
+} */
+
+
+.card {
+    width: 250px;
+    height: 250px;
+    padding: 2rem 1rem;
+    background: #fff;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    box-shadow: 0px 7px 10px rgba(0,0,0,0.5);
+    transition: 0.5s ease-in-out; 
+}
+
+.card:hover{
+    transform: translateY(20px);
+}
+
+.card:before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,176,155,0.5), rgba(150, 201, 61, 1));
+    z-index: 2;
+    transition: 0.5s all;
+    opacity: 0;
+}
+
+.card:hover:before {
+    opacity: 1;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card .info {
+    position: relative;
+    z-index: 3;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 0.5s all;
+}
+
+.card:hover .info{
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.card .info h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.card .info p{
+    letter-spacing: 1px;
+    font-size: 10px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.card .info .btn1 {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+
+.card .info .btn2 {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+
+.card .info .btn1:hover{
+    box-shadow: 0px 7px 10px rgba(0,0,0,0.5);
+}
+
+.card .info .btn2:hover{
+    box-shadow: 0px 7px 10px rgba(0,0,0,0.5);
+}
+
+/* -------------- heros page style - end -------------- */
+
+
+
+/* attributes.html */
+
+
+
+/* 
+.roles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+  
+.role {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 200px;
+}
+  
+.role-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+  
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+  
+.progress {
+    height: 100%;
+    background-color: blue;
+    border-radius: 5px;
+} */
+
+/* 
+.info-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    color: black;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.2s, opacity 0.2s;
+}
+  
+.info-image:hover .info-box {
+    visibility: visible;
+    opacity: 1;
+}
+   */
+
+/* .div1 {
+    width: 100%;
+    height: 200vh;
+    padding-left: 6%;
+    padding-right: 6%;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+}
+
+.div1 .input-box {
+    width: fit-content;
+}
+
+.input-box h1 {
+    font-size: 100px;
+} */
+
+.div1 {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 20px auto;
+    padding-left: 10%;
+    padding-right: 10%;
+    background-color: transparent;
+    position: absolute; /* Change to absolute positioning */
+    top: 200px; /* Adjust the top value to move closer to the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+}
+  
+.info-box {
+    flex: 1; /* Make info-box flexible to fill available space */
+    flex-basis: 40%;
+    margin-right: 20px; /* Add margin to the right */
+}
+  
+.hero-image {
+    flex: 1; /* Make hero-image flexible to fill available space */
+}
+  
+.info-box h1 {
+    font-size: 24px; /* Set heading size */
+    margin-bottom: 10px; /* Add margin for spacing */
+    color: white;
+    font-family: "Galindo", sans-serif;
+    font-size: 70px;
+}
+  
+.info-box p {
+    line-height: 1.5; /* Adjust line spacing for readability */
+    color: #fff;
+    font-size: 20px;
+}
+
+.div2 {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    /* background: transparent;
+    backdrop-filter: blur(20px); */
+    background-color:#1e1e1e ;
+    padding-left: 3%;
+    padding-right: 3%;
+    position: absolute; /* Change to absolute positioning */
+    top: 480px; /* Adjust the top value to move closer to the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+}
+  
+.d-h {
+    display: flex; /* Make d-h a flex container */
+    justify-content: space-between; /* Distribute content horizontally */
+    margin-bottom: 15px; /* Add margin for spacing */
+    padding-right: 3%;
+    flex-basis: 40%;
+
+}
+  
+.role {
+    display: flex; /* Make role a flex container */
+    align-items: center; /* Align elements vertically */
+    margin-bottom: 5px; /* Add margin for spacing */
+}
+  
+.role-name {
+    font-weight: bold; /* Set font weight for role name */
+    margin-right: 10px; /* Add margin to the right */
+}
+  
+.progress-bar {
+    width: 100%; /* Set progress bar width */
+    height: 10px; /* Set progress bar height */
+    background-color: #ddd; /* Set background color for the bar */
+}
+  
+.progress {
+    height: 100%; /* Set progress fill height */
+    background-color: #008000; /* Set progress fill color */
+}
+  
+.state-type,
+.powers {
+    margin-top: 15px; /* Add margin for spacing */
+    margin-right: 3%;
+    flex-basis: 40%;
+}
+  
+.state-type h3,
+.powers h3 {
+    font-size: 18px; /* Set heading size */
+    margin-bottom: 5px; /* Add margin for spacing */
+}

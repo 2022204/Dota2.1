@@ -1,18 +1,24 @@
-{% extends "layout.html" %}
+{% extends "main.html" %}
 
 {% block title %}Login Page{% endblock %}
 {% block body %}
-    <form action="/" method="post">
+<div class="wrapper">
+    <form action="/login" method = "post">
         <h1>LOGIN</h1>
         <div class="input-box">
-            <input type="text" name="username" placeholder="Username" required>
+            <input type ="text" name = "username" placeholder="Username"  required>
+            <i class='bx bxs-user'></i>
         </div>
+
         <div class="input-box">
-            <input type="password" name="password" placeholder="Password" required>
+            <input type ="password" name = "password" placeholder="Password"  required>
+            <i class='bx bxs-lock-alt'></i>
         </div>
+
         <button type="submit" class="btn">Login</button>
+
         <div class="register-link">
-            <p>Don't have an account?<a href="/register"> Register</a></p>
+            <p>Don't have an account?<a href="/register">Click here</a></p>
         </div>
     </form>
 {% endblock %}

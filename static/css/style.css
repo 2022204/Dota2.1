@@ -11,17 +11,15 @@ body {
     align-items: center;
     min-height: 100vh ;
     /* background: rgb(52, 52, 52); */
-    background: url('bck.jpg') no-repeat;
+    background: url('static/images/bck.jpg') no-repeat;
     background-size: cover;
     background-position: center;
-/* -------------- */
     display: flex;
     flex-direction: column;
 }
 
 .wrapper {
     width: 420px ;
-    /* background: rgb(115, 114, 114); */
     background: transparent;
     border: 2px solid rgba(255,255,255, .2);
     backdrop-filter: blur(20px);

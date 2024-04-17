@@ -10,7 +10,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 socketio = SocketIO(app)
-# db = SQL("sqlite:///game.db")
 
 users = [{"username":"hasan","password":"qwe", "value":123},
          {"username":"ali","password":"123123", "value":10},
@@ -38,6 +37,7 @@ def handleMsg(msg):
 @app.route('/fight')
 def fight():
     return render_template("fight.html", messages = messages)
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -47,8 +47,14 @@ def after_request(response):
     return response
 
 
-
-@app.route('/', methods = ["GET", "POST"])
+@app.route('/', methods = ["POST","GET"])
+def main():
+    if request.method == "GET":
+        return render_template("homepage.html")
+    else:
+        return render_template("login.html")
+    
+@app.route('/login', methods = ["GET", "POST"])
 def login():
     session.clear()
     if request.method == "GET":
@@ -81,11 +87,14 @@ def register():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
+        email = request.form.get("email")
         confirmation = request.form.get("confirmation")
         if not username:
             return render_template("Apology.html", message = "Must enter username")
         elif not password:
             return render_template("Apology.html", message = "Must enter Password")
+        elif not email:
+            return render_template("Apology.html", message = "Must enter email")
         elif not confirmation:
             return render_template("Apology.html", message = "Must Enter confirmation password")
         elif password != confirmation:

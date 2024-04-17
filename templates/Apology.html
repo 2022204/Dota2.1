@@ -1,9 +1,22 @@
-{% extends "layout.html" %}
+{% extends "main.html" %}
 
 {% block title %} APOLOGY PAGE {% endblock %}
 {% block body %}
+<style>
+    .centered-message {
+        color: white;
+        text-align: center;
+        /* Additional styling to ensure it is centered on the page */
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
 
-<h1>{{message}}</h1>
+
+<h1 class="centered-message">{{ message }}</h1>
+
 
 
 {% endblock %}

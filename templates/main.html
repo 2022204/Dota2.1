@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dota V.02</title>
+        <link rel="stylesheet" href="/static/css/loginstyle.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+            <div class="navbar">
+                <nav>
+                    <h2 class="logo"><a href="/">Dota <span>V.02</span></a></h2>
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">Update</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">Contact Us</a></li>
+                    </ul>
+                    <form action="/login" method="get">
+                        <button type="submit" class="login">LOGIN</button>
+                    </form> 
+                </nav>
+            </div>
+            {% block body %}{% endblock %}         
+	
+ </body>
+</html>

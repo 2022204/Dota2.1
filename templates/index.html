@@ -1,15 +1,38 @@
-{% extends "layout_index.html" %}
+{% extends "main_index.html" %}
 
 {% block title %} Welcome {{username}}!!! {% endblock %}
-{% block body %}
 
-<div class="container-fluid">
-    <h1 class="text-center my-4">Welcome {{username}} !!!</h1>
+{% block body %}
+<style>
+    .centered-message {
+        color: white;
+        text-align: center;
+        /* Additional styling to ensure it is centered on the page */
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .table-custom {
+    background-color: rgb(219, 107, 107); 
+    color: rgb(254, 254, 254); 
+}
+
+.table-custom thead th {
+    background-color: #f8f9fa; 
+}
+
+.table-custom tbody tr {
+    background-color: white; 
+}
+</style>
+<div class="container-fluid mt-3">
+    <h1 class="centered-message">Welcome {{username}} !!!</h1>
     
     <div class="row">
         <div class="col-12">
-            <table class="table table-hover table-bordered">
-                <thead class="thead-dark">
+            <table class="table table-hover table-bordered table-custom">
+                <thead class="table-light">  
                     <tr>
                         <th scope="col">You</th>
                         <th scope="col">vs</th>
