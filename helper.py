@@ -4,6 +4,7 @@ def main():
 
 def checkuser(users, username, password):
     for i in users:
+        print(i["username"], type(i["username"]), i["password"], type(i["password"]), username, password)
         if i["username"] == username and i["password"] == password:
             return None, i["value"]
     

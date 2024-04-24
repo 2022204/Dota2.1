@@ -11,9 +11,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 socketio = SocketIO(app)
 
-users = [{"username":"hasan","password":"qwe", "value":123},
-         {"username":"ali","password":"123123", "value":10},
-         {"username":"Farza","password":"???","value":1234}]
+users = [{"username":"hasan","password":"hasan", "value":123},
+         {"username":"ali","password":"ali", "value":10},
+         {"username":"farza","password":"farza","value":1234}]
 
 duels = [
         {'username':'hasan','opponent': 'Murtaza', 'time': '12:00', 'result': 'Won', 'exchange':100},
@@ -61,10 +61,9 @@ def login():
         return render_template("login.html")
     else:
         username = request.form.get("username")
-        password = request.form.get("password")
+        password = hashed_password(request.form.get("password"))
 
-        print(username, password)
-
+        
         if not username:
             return render_template("Apology.html", message = "Must enter username")
         elif not password:
