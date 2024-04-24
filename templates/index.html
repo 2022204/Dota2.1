@@ -3,14 +3,67 @@
 {% block title %} Welcome {{username}}!!! {% endblock %}
 
 {% block body %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: #444; 
+        border: 1px solid #555;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+    }
 
-<div class="container-fluid mt-3">
+    h2 {
+        border-bottom: 2px solid #666;
+        padding-bottom: 10px;
+    }
+    h2, .centered-message {
+        border-bottom: 2px solid #666;
+        padding-bottom: 10px;
+        text-align: center; 
+    }
+
+    table {
+        width: 100%; 
+        border-collapse: collapse; 
+    }
+
+    th, td {
+        border: 1px solid #777; 
+        padding: 8px;
+        text-align: center; 
+    }
+
+    th {
+        background-color: #555; 
+        color: #fff; 
+    }
+
+    .table-light {
+        background-color: #666; 
+        color: #fff; 
+    }
+
+    .table-success, .table-danger {
+        color: #fff; 
+    }
+
+    .table-success {
+        background-color: #28a745; 
+    }
+
+    .table-danger {
+        background-color: #dc3545; 
+    }
+</style>
+<div class="container">
     <h1 class="centered-message">Welcome {{username}} !!!</h1>
-    
+
     <div class="row">
         <div class="col-12">
             <table class="table table-hover table-bordered table-custom">
-                <thead class="table-light">  
+                <thead class="table-light">
                     <tr>
                         <th scope="col">You</th>
                         <th scope="col">vs</th>
