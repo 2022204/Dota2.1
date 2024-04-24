@@ -27,7 +27,6 @@ for hero in [h for h in my_heros if h["username"] == userid]:
         hero_details["items"].append({"itemid": warrior["itemid"], "details": item})
     details.append(hero_details)
 
-print(details)
 
 for i in details:
     print(f'\n\nHERONAME: {i["heroname"]}\n\n')

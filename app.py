@@ -61,7 +61,7 @@ def login():
         return render_template("login.html")
     else:
         username = request.form.get("username")
-        password = hashed_password(request.form.get("password"))
+        password = request.form.get("password")
 
         
         if not username:
