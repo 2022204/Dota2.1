@@ -1,0 +1,60 @@
+{% extends "main_index.html" %}
+
+{% block title %} Your Warriors {% endblock %}
+
+{% block body %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: #444;
+        border: 1px solid #555;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        border-bottom: 2px solid #666;
+        padding-bottom: 10px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    ul ul {
+        padding-left: 20px;
+    }
+
+    ul ul li {
+        font-size: 0.9em;
+        /* Smaller font size for sub-items */
+        color: #ddd;
+        /* Light gray for less important items */
+    }
+</style>
+<div class="container">
+    {% for hero in details %}
+    <h2>Hero: {{ hero.heroname }}</h2>
+    <ul>
+        {% for item in hero.warrior_items %}
+        <li>
+            Item Name: {{ item.details.itemname }}
+            <ul>
+                <li>Health: {{ item.details.health }}</li>
+                <li>Attack: {{ item.details.attack }}</li>
+                <li>Damage: {{ item.details.damage }}</li>
+                <li>Armor: {{ item.details.armor }}</li>
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</div>
+{% endblock %}

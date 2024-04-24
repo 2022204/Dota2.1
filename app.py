@@ -47,6 +47,11 @@ def after_request(response):
     return response
 
 
+@app.route('/buy')
+def buy():
+    return render_template("buy.html")
+
+
 @app.route('/', methods = ["POST","GET"])
 def main():
     if request.method == "GET":
@@ -122,25 +127,40 @@ def logout():
     session.clear()
     return redirect("/")
 
+# Define data structures
+my_heros = [
+    {"username": "hasan", "heroname": "slardar", "warriorid": 1},
+    {"username": "hasan", "heroname": "sniper", "warriorid": 2},
+    {"username": "farza", "heroname": "slark", "warriorid": 3}
+]
 
-my_heros = [{"username":"hasan", "heroname":"slardar", "warriarid":1},
-            {"username":"hasan","heroname":"sniper","warriarid":2},
-            {"username":"farza","heroname":"slark","warriarid":3}]
+my_warriors = [
+    {"warriorid": 1, "itemid": 1}, {"warriorid": 1, "itemid": 2},
+    {"warriorid": 2, "itemid": 1}, {"warriorid": 2, "itemid": 3},
+    {"warriorid": 3, "itemid": 2}, {"warriorid": 3, "itemid": 3}
+]
 
-my_warriars = [{"warriarid":1,"itemid":1},{"warriarid":1,"itemid":2}, 
-               {"warriarid":2, "itemid":1},{"warriarid":2,"itemid":3},
-               {"warriarid":3,"itemid":2},{"warriarid":3,"itemid":3}]
-
-my_items = [{"itemid":1, "health":200,"attack":0,"damage":0,"armor":3},
-            {"itemid":2, "health":0,"attack":110,"damage":230,"armor":3},
-            {"itemid":3, "health":55,"attack":55,"damage":55,"armor":5}]
+my_items = [
+    {"itemid": 1, "itemname":"item1","health": 200, "attack": 0, "damage": 0, "armor": 3},
+    {"itemid": 2, "itemname":"item2", "health": 0, "attack": 110, "damage": 230, "armor": 3},
+    {"itemid": 3, "itemname":"item3","health": 55, "attack": 55, "damage": 55, "armor": 5}
+]
 
 
-@app.route("/warrior")
-def warrriors():
-    userid = session["username"]
-    warriarids = [warriars["warriarid"] for warriars in my_heros if warriars["username"] == userid]
-    
+@app.route("/Warrior")
+def warriors():
+    userid = session["user"]
+        
+    details = []
+    for hero in [h for h in my_heros if h["username"] == userid]:
+        hero_details = {"heroname": hero["heroname"], "warrior_items": []}
+        for warrior in [w for w in my_warriors if w["warriorid"] == hero["warriorid"]]:
+            item = next(item for item in my_items if item["itemid"] == warrior["itemid"])
+            hero_details["warrior_items"].append({"itemid": warrior["itemid"], "details": item})
+        details.append(hero_details)
+
+    return render_template("warriors.html", details = details)
+
 
 if __name__ == "__main__":
     socketio.run(app, host = '0.0.0.0', port = 5000, debug = True)

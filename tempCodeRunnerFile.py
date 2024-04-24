@@ -1,10 +1,6 @@
 
-# List of itemids for which details are needed
-requested_itemids = [1, 3]  # Modify this list as needed
-
-# Create a dictionary to store details of specified items
-item_details = {item['itemid']: item for item in my_items if item['itemid'] in requested_itemids}
-
-# Example usage: Print details of all requested items
-for itemid in requested_itemids:
-    print(f"Details for itemid {itemid}:", item_details[itemid])
+my_items = [
+    {"itemid": 1, "itemname":"item1","health": 200, "attack": 0, "damage": 0, "armor": 3},
+    {"itemid": 2, "itemname":"item2", "health": 0, "attack": 110, "damage": 230, "armor": 3},
+    {"itemid": 3, "itemname":"item3","health": 55, "attack": 55, "damage": 55, "armor": 5}
+]

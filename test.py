@@ -12,9 +12,9 @@ my_warriors = [
 ]
 
 my_items = [
-    {"itemid": 1, "health": 200, "attack": 0, "damage": 0, "armor": 3},
-    {"itemid": 2, "health": 0, "attack": 110, "damage": 230, "armor": 3},
-    {"itemid": 3, "health": 55, "attack": 55, "damage": 55, "armor": 5}
+    {"itemid": 1, "itemname":"item1","health": 200, "attack": 0, "damage": 0, "armor": 3},
+    {"itemid": 2, "itemname":"item2", "health": 0, "attack": 110, "damage": 230, "armor": 3},
+    {"itemid": 3, "itemname":"item3","health": 55, "attack": 55, "damage": 55, "armor": 5}
 ]
 
 userid = "farza"
@@ -27,10 +27,3 @@ for hero in [h for h in my_heros if h["username"] == userid]:
         hero_details["items"].append({"itemid": warrior["itemid"], "details": item})
     details.append(hero_details)
 
-
-for i in details:
-    print(f'\n\nHERONAME: {i["heroname"]}\n\n')
-    for j in range(len(i["items"])):
-        item = i["items"][j]  # Retrieve the item dictionary
-        print(f'Item {item["itemid"]}: Health: {item["details"]["health"]}   Attack: {item["details"]["attack"]} '
-              f'Damage: {item["details"]["damage"]}   Armor: {item["details"]["armor"]}')
