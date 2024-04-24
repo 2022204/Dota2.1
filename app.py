@@ -123,5 +123,24 @@ def logout():
     return redirect("/")
 
 
+my_heros = [{"username":"hasan", "heroname":"slardar", "warriarid":1},
+            {"username":"hasan","heroname":"sniper","warriarid":2},
+            {"username":"farza","heroname":"slark","warriarid":3}]
+
+my_warriars = [{"warriarid":1,"itemid":1},{"warriarid":1,"itemid":2}, 
+               {"warriarid":2, "itemid":1},{"warriarid":2,"itemid":3},
+               {"warriarid":3,"itemid":2},{"warriarid":3,"itemid":3}]
+
+my_items = [{"itemid":1, "health":200,"attack":0,"damage":0,"armor":3},
+            {"itemid":2, "health":0,"attack":110,"damage":230,"armor":3},
+            {"itemid":3, "health":55,"attack":55,"damage":55,"armor":5}]
+
+
+@app.route("/warrior")
+def warrriors():
+    userid = session["username"]
+    warriarids = [warriars["warriarid"] for warriars in my_heros if warriars["username"] == userid]
+    
+
 if __name__ == "__main__":
     socketio.run(app, host = '0.0.0.0', port = 5000, debug = True)
