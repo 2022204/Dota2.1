@@ -46,6 +46,25 @@ def after_request(response):
     return response
 
 
+@app.route('/sell')
+def sell():
+    ## Select Warrior Ids from users inventory
+    ## Select all items associate with the warriors
+    ## Write them into details datatype
+    userid = session["user_id"]
+    if request.method == "GET":
+        details = []
+        for hero in [h for h in my_heros if h["username"] == userid]:
+            hero_details = {"heroname": hero["heroname"], "warrior_items": []}
+            for warrior in [w for w in my_warriors if w["warriorid"] == hero["warriorid"]]:
+                item = next(item for item in my_items if item["itemid"] == warrior["itemid"])
+                hero_details["warrior_items"].append({"itemid": warrior["itemid"], "details": item})
+            details.append(hero_details)
+
+        return render_template("sell.html", details = details)
+    else:
+        
+
 @app.route('/buy')
 def buy():
     return render_template("buy.html")
@@ -75,6 +94,7 @@ def login():
         else:
             hash = hashed_password(password) 
             # users = db.execute("SELECT * FROM users")
+            # 
             message, value = checkuser(users, username, hash)
             if message != None:
                 return render_template("Apology.html", message= message)
@@ -83,6 +103,7 @@ def login():
                 my_duels = [duel for duel in duels if duel.get('username') == username]
                 return render_template("index.html", username = username, duels = my_duels)
         
+
 @app.route('/register', methods = ["GET","POST"])
 def register():
     if request.method == "GET":
@@ -104,11 +125,15 @@ def register():
             return render_template("Apology.html",message = "Passwords Don't match")
         else:
             hash = hashed_password(password)
+
+            # Insert into users //
             users.append({"username":username, "password":hash, "value":0})
-            
+            ##
+
             session["user"] = username  #replace with user_id later
             my_duels = [duel for duel in duels if duel.get('username') == username]
             return render_template("index.html", username = username, duels = my_duels)
+
 
 @app.route("/index")
 def index():
@@ -117,7 +142,10 @@ def index():
         return redirect('/')
     
     user= session["user"]
+    ## Replace with SELECT history from histories where user_id = user;
     my_duels = [duel for duel in duels if duel.get('username') == user]
+    ##
+
     return render_template("index.html", username = user, duels = my_duels)
 
 
@@ -149,7 +177,10 @@ my_items = [
 @app.route("/Warrior")
 def warriors():
     userid = session["user"]
-        
+    
+    ## Select Warrior Ids from users inventory
+    ## Select all items associate with the warriors
+    ## Write them into details datatype
     details = []
     for hero in [h for h in my_heros if h["username"] == userid]:
         hero_details = {"heroname": hero["heroname"], "warrior_items": []}

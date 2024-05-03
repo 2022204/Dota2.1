@@ -26,85 +26,9 @@ conn = psycopg2.connect(
 # Check if connection is established
 if conn is not None:
     print("Connection to the database is successful.")
-    # Execute queries or perform database operations here
     cur = conn.cursor()
-    
-    # Create tables
-    queries = [
-        '''
-        CREATE TABLE Users (
-            user_id SERIAL PRIMARY KEY,
-            username VARCHAR(255),
-            password VARCHAR(255) UNIQUE NOT NULL,
-            gold REAL
-        )
-        ''',
-        '''
-        CREATE TABLE Heroes (
-            hero_id SERIAL PRIMARY KEY,
-            cost REAL,
-            health VARCHAR(200),
-            statetype INT,
-            user_id INT,
-            CONSTRAINT fk_constraint_users FOREIGN KEY(user_id) REFERENCES Users(user_id)
-        )
-        ''',
-        '''
-        CREATE TABLE Items (
-            item_id SERIAL PRIMARY KEY,
-            HP REAL,
-            cost REAL,
-            attackspeed REAL,
-            damage REAL,
-            hero_id INT,
-            CONSTRAINT fk_constraint_heroes FOREIGN KEY(hero_id) REFERENCES Heroes(hero_id)
-        )
-        ''',
-        '''
-        CREATE TABLE Maps (
-            map_id SERIAL PRIMARY KEY,
-            type VARCHAR(200),
-            size REAL
-        )
-        ''',
-        '''
-        CREATE TABLE NPC (
-            npc_id SERIAL PRIMARY KEY,
-            gold_value REAL,
-            hp REAL,
-            damage VARCHAR(200),
-            attackspeed REAL,
-            armor REAL,
-            map_id INT,
-            hero_id INT,
-            CONSTRAINT fk_constraint_maps FOREIGN KEY(map_id) REFERENCES Maps(map_id),
-            CONSTRAINT fk_constraint_heroes FOREIGN KEY(hero_id) REFERENCES Heroes(hero_id)
-        )
-        ''',
-        '''
-        CREATE TABLE Powers (
-            power_id INT PRIMARY KEY,
-            effect VARCHAR(255),
-            Type VARCHAR(255),
-            hero_id INT,
-            CONSTRAINT fk_constraint_heroes_powers FOREIGN KEY(hero_id) REFERENCES Heroes(hero_id)
-        )
-        ''',
-        '''
-        CREATE TABLE All_Fights (
-            fight_id SERIAL PRIMARY KEY,
-            details VARCHAR(255),
-            user_id INT,
-            CONSTRAINT fk_constraint_users FOREIGN KEY(user_id) REFERENCES Users(user_id)
-        )
-        '''
-    ]
 
-    for query in queries:
-        cur.execute(query)
-        conn.commit()  # Commit each query
 
-    print("Tables created successfully.")
     
     # Insert some data into Users table
     cur.execute("INSERT INTO Users (username, password, gold) VALUES (%s, %s, %s)", ('user1', 'password1', 100))

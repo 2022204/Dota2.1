@@ -142,3 +142,7 @@ if conn:
 
     # Close connection
     conn.close()
+
+query = "SELECT * FROM Heros"
+
+print(select_data(conn, query))
