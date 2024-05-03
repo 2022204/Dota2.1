@@ -1,6 +1,6 @@
 {% extends "main_index.html" %}
 
-{% block title %} Sell Items {% endblock %}
+{% block title %} BUY Items {% endblock %}
 
 {% block body %}
 <style>
@@ -46,21 +46,20 @@
     }
 </style>
 <div class="container">
-    {% for hero in heroes %}
-        <div class="item">
-            <div class="item-details">
-                <div class="item-attribute">Health: {{ hero.health }}</div>
-                <div class="item-attribute">Attack Speed: {{ hero.attackspeed }}</div>
-                <div class="item-attribute">Damage: {{ hero.Damage }}</div>
-                <div class="item-attribute">Armor: {{ hero.armor }}</div>
-                <div class="item-attribute">Respawn Time: {{ hero['respawn time'] }}</div>
-                <div class="item-attribute">Price: {{ hero.price }}</div>
+        {% for item in items %}
+            <div class="item">
+                <div class="item-details">
+                    <span class="item-number">{{ loop.index }}</span>
+                    <span class="item-attribute">Health: {{ item.health }}</span>
+                    <span class="item-attribute">Attack: {{ item.attack }}</span>
+                    <span class="item-attribute">Damage: {{ item.damage }}</span>
+                    <span class="item-attribute">Armor: {{ item.armor }}</span>
+                </div>
+                <form action="/buy_item" method="post">
+                    <input type="hidden" name="item_id" value="{{ item.itemid }}">
+                    <button type="submit" class="sell-button">buy for {{item.price}} ONLY</button>
+                </form>
             </div>
-            <form action="/buy_hero" method="post">
-                <input type="hidden" name="hero_id" value="{{ hero.heroid }}">
-                <button type="submit" class="sell-button">Buy for {{hero.price}} only</button>
-            </form>
-        </div>
-    {% endfor %}
+        {% endfor %}
 </div>
 {% endblock %}

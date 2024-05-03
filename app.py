@@ -88,16 +88,55 @@ heroes = [
     {"heroid": 1, "health": 130, "attackspeed": 170, "Damage": 120, "armor": 9, "respawn time": 45, "price": 28}
 ]
 
+items = [
+    {"itemid": 1, "itemname":"item1","health": 200, "attack": 0, "damage": 0, "armor": 3,"price":20},
+    {"itemid": 2, "itemname":"item2", "health": 0, "attack": 110, "damage": 230, "armor": 3,"price":2},
+    {"itemid": 3, "itemname":"item3","health": 55, "attack": 55, "damage": 55, "armor": 5, "price":10}
+]
+
+@app.route('/buy_item',methods = ["POST","GET"])
+def buy_item():
+    user_id = session["user"]
+    #heros = SELECT * FROM heros;
+    if request.method == "GET":
+        return render_template("buy_item.html", items = items)
+    else:
+        itemid = int(request.form.get("item_id"))
+        item = next((item for item in items if item["itemid"] == itemid), None)
+        price = item.get("price")
+        # SELECT cash from user where userid = user_id
+        cash = 100  # temp
+        if cash < price:
+            return render_template("Apology.html", messages = "NOT ENOUGH CASH!!!")
+        
+        cash -= price
+
+        #Update cash from user where userid = user_id
+        #insert into owned_warriors ('user_id','hero_id') VALUES (user_id, heroid)
+        return redirect("\index")
+
 @app.route('/buy_hero', methods = ["GET","POST"])
 def buy_hero():
-    
-    return render_template("buy_hero.html", heros = heros)
+    # Select * FROM heros 
+    user_id = session["user"]
+    #heros = SELECT * FROM heros;
+    if request.method == "GET":
+        return render_template("buy_hero.html", heroes = heroes)
+    else:
+        heroid = int(request.form.get("hero_id"))
+        hero = next((hero for hero in heroes if hero["heroid"] == heroid), None)
+        price = hero.get("price")
+        # SELECT cash from user where userid = user_id
+        cash = 100  # temp
+        if cash < price:
+            return render_template("Apology.html", messages = "NOT ENOUGH CASH!!!")
+        
+        cash -= price
 
+        #Update cash from user where userid = user_id
+        #insert into owned_warriors ('user_id','hero_id') VALUES (user_id, heroid)
+        return redirect("\index")
 
-@app.route('/buy_item', methods = ["GET","POST"])
-def buy_item():
-    
-    return render_template("buy.html")
 
 
 @app.route('/', methods = ["POST","GET"])
@@ -200,7 +239,7 @@ my_items = [
 ]
 
 
-@app.route("/Warrior")
+@app.route("/warrior")
 def warriors():
     userid = session["user"]
     
