@@ -1,12 +1,7 @@
 
-duels = [
-        {'username':'hasan','opponent': 'Murtaza', 'time': '12:00', 'result': 'Won', 'exchange':100},
-        {'username':'hasan','opponent': 'Farza', 'time': '12:30', 'result': 'Lost', 'exchange':-230},
-        {'username':'hasan','opponent': 'Maryam', 'time': '13:00', 'result': 'Won', 'exchange': 102},
-        {'username':'farza','opponent': 'Hasan', 'time': '12:30', 'result': 'Won', 'exchange': 230},
-    ]
-username = "farza"
+my_warriors = [
+    {"warriorid": 1, "itemid": 1}, {"warriorid": 1, "itemid": 2},
+    {"warriorid": 2, "itemid": 1}, {"warriorid": 2, "itemid": 3},
+    {"warriorid": 3, "itemid": 2}, {"warriorid": 3, "itemid": 3}
+]
 
-my_duels = [duel for duel in duels if duel.get('username') == username]
-
-print(my_duels)
