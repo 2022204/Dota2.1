@@ -3,53 +3,23 @@
 {% block title %} Your Warriors {% endblock %}
 
 {% block body %}
-<style>
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background-color: #444;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        color: #ddd;
-        font-family: 'Arial', sans-serif;
-    }
 
-    .hero-name {
-        font-size: 1.5em;
-        color: #fff;
-        margin-bottom: 0.5em;
-    }
-
-    .items {
-        margin-left: 20px;
-    }
-
-    .item-name {
-        font-weight: bold;
-        display: inline-block;
-        width: 150px; /* Adjust as needed */
-    }
-
-    .item-detail {
-        display: inline-block;
-        margin-left: 20px;
-    }
-</style>
-<div class="container">
-    {% for hero in details %}
-    <div class="hero-section">
-        <div class="hero-name">{{ hero.heroname | capitalize }}</div>
-        {% for item in hero.warrior_items %}
-        <div class="items">
-            <span class="item-name">{{ item.details.itemname | capitalize }}</span>
-            <span class="item-detail">Health: {{ item.details.health }}</span>
-            <span class="item-detail">Attack: {{ item.details.attack }}</span>
-            <span class="item-detail">Damage: {{ item.details.damage }}</span>
-            <span class="item-detail">Armor: {{ item.details.armor }}</span>
+<div class="general">
+    <div class="container3">
+        {% for hero in details %}
+        <div class="hero-section">
+            <div class="hero-name">{{ hero.heroname | capitalize }}:</div>
+            {% for item in hero.warrior_items %}
+            <div class="items">
+                <span class="item-name">{{ item.details.itemname | capitalize }}</span>
+                <span class="item-detail">Health: {{ item.details.health }}</span>
+                <span class="item-detail">Attack: {{ item.details.attack }}</span>
+                <span class="item-detail">Damage: {{ item.details.damage }}</span>
+                <span class="item-detail">Armor: {{ item.details.armor }}</span>
+            </div>
+            {% endfor %}
         </div>
         {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

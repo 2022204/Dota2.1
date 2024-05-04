@@ -3,63 +3,39 @@
 {% block title %} BUY Items {% endblock %}
 
 {% block body %}
-<style>
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background-color: #444;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        color: #ddd;
-        font-family: 'Arial', sans-serif;
-    }
 
-    .item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .item-details {
-        display: flex;
-        align-items: center;
-    }
-
-    .item-number {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-
-    .item-attribute {
-        margin-right: 10px;
-    }
-
-    .sell-button {
-        background-color: #FF5733;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-</style>
-<div class="container">
-        {% for item in items %}
-            <div class="item">
-                <div class="item-details">
-                    <span class="item-number">{{ loop.index }}</span>
-                    <span class="item-attribute">Health: {{ item.health }}</span>
-                    <span class="item-attribute">Attack: {{ item.attack }}</span>
-                    <span class="item-attribute">Damage: {{ item.damage }}</span>
-                    <span class="item-attribute">Armor: {{ item.armor }}</span>
-                </div>
-                <form action="/buy_item" method="post">
-                    <input type="hidden" name="item_id" value="{{ item.itemid }}">
-                    <button type="submit" class="sell-button">buy for {{item.price}} ONLY</button>
-                </form>
-            </div>
-        {% endfor %}
+<div class="general">
+    <div class="container2">
+        <table class="item-table">
+            <thead>
+                <tr>
+                    <th class="number">#</th>
+                    <th class="item-attribute-head">Health</th>
+                    <th class="item-attribute-head">Attack</th>
+                    <th class="item-attribute-head">Damage</th>
+                    <th class="item-attribute-head">Armor</th>
+                    <th class="item-action-head">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="number">{{ loop.index }}</td>
+                <td class="item-attribute">{{ item.health }}</td>
+                <td class="item-attribute">{{ item.attack }}</td>
+                <td class="item-attribute">{{ item.damage }}</td>
+                <td class="item-attribute">{{ item.armor }}</td>
+                <td class="item-action">
+                    <!-- add 'view details icon here' -->
+                    <form action="/buy_item" method="post">
+                        <input type="hidden" name="item_id" value="{{ item.itemid }}">
+                        <button type="submit" class="sell-button">buy for {{item.price}} ONLY</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
