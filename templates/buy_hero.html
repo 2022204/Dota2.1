@@ -3,64 +3,42 @@
 {% block title %} Sell Items {% endblock %}
 
 {% block body %}
-<style>
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background-color: #444;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        color: #ddd;
-        font-family: 'Arial', sans-serif;
-    }
 
-    .item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .item-details {
-        display: flex;
-        align-items: center;
-    }
-
-    .item-number {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-
-    .item-attribute {
-        margin-right: 10px;
-    }
-
-    .sell-button {
-        background-color: #FF5733;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-</style>
-<div class="container">
-    {% for hero in heroes %}
-        <div class="item">
-            <div class="item-details">
-                <div class="item-attribute">Health: {{ hero.health }}</div>
-                <div class="item-attribute">Attack Speed: {{ hero.attackspeed }}</div>
-                <div class="item-attribute">Damage: {{ hero.Damage }}</div>
-                <div class="item-attribute">Armor: {{ hero.armor }}</div>
-                <div class="item-attribute">Respawn Time: {{ hero['respawn time'] }}</div>
-                <div class="item-attribute">Price: {{ hero.price }}</div>
-            </div>
-            <form action="/buy_hero" method="post">
-                <input type="hidden" name="hero_id" value="{{ hero.heroid }}">
-                <button type="submit" class="sell-button">Buy for {{hero.price}} only</button>
-            </form>
-        </div>
-    {% endfor %}
+<div class="general">
+    <div class="container2">
+        <table class="hero-table">
+            <thead>
+                <tr>
+                    <th class="hero-attribute-head">Health</th>
+                    <th class="hero-attribute-head">Attack Speed</th>
+                    <th class="hero-attribute-head">Damage</th>
+                    <th class="hero-attribute-head">Armor</th>
+                    <th class="hero-attribute-head">Respawn Time</th>
+                    <th class="hero-attribute-head">Price</th>
+                    <th class="hero-action-head">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+        {% for hero in heroes %}
+            <tr>
+                <td class="hero-attribute">{{ hero.health }}</td>
+                <td class="hero-attribute">{{ hero.attackspeed }}</td>
+                <td class="hero-attribute">{{ hero.Damage }}</td>
+                <td class="hero-attribute">{{ hero.armor }}</td>
+                <td class="hero-attribute">{{ hero['respawn time'] }}</td>
+                <td class="hero-attribute">{{ hero.price }}</td>
+                <td class="hero-action">
+                    <form action="/buy_hero" method="post">
+                        <input type="hidden" name="hero_id" value="{{ hero.heroid }}">
+                        <button type="submit" class="sell-button">Buy for {{hero.price}} only</button>
+                    </form>
+                    <form action="/details" method="post">
+                        <input type="hidden" name="hero_detail" value="{{hero.heroid}}">
+                        <button type="submit" class="detail-button">View Details</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

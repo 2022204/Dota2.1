@@ -571,3 +571,219 @@ button:hover {
     font-size: 18px; /* Set heading size */
     margin-bottom: 5px; /* Add margin for spacing */
 }
+
+/* general style to pages (after login) */
+.general {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background: transparent;
+    border: 2px solid rgba(255,255,255, .2);
+    backdrop-filter: blur(50px);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* index.html styling */
+
+.container1 h2 {
+    border-bottom: 2px solid #666;
+    padding-bottom: 10px;
+}
+
+.container1 h2, .centered-message {
+    border-bottom: 2px solid #666;
+    padding-bottom: 10px;
+    text-align: center; 
+}
+
+.container1 table {
+    width: 100%; 
+    border-collapse: collapse; 
+    color: #fff;
+}
+
+.container1 th, td {
+    border: 1px solid #777; 
+    padding: 8px;
+    text-align: center; 
+}
+
+.container1 th {
+    background-color: #555;
+}
+
+.table-light {
+    background-color: #666;
+}
+
+.table-success {
+    background-color: #28a745; 
+}
+
+.table-danger {
+    background-color: #dc3545; 
+}
+
+
+/* buy_hero.html, buy_item.html and sell.html style */
+
+.container2 {
+    color: #ddd;
+    font-family: 'Arial', sans-serif;
+}
+
+.hero-attribute {
+    min-width: 80px;
+    height: fit-content;
+}
+
+.hero-action {
+    text-align: center;
+    align-items: center;
+    min-width: 150px;
+}
+
+.hero-attribute-head, .hero-action-head {
+    color: #fff;
+    text-shadow: #1e1e1e;
+}
+
+.container2 table {
+    border-collapse: collapse;
+    /* border-spacing: 0 5em; */
+    border: none;
+}
+
+/* buy-item.html */
+.item-table {
+    border-collapse: collapse;
+    /* border: 1px solid #ccc; */
+}
+
+.item-attribute {
+    margin-right: 20px;
+    min-width: 100px;
+}
+
+.item-attribute-head, .item-action-head{
+    margin-right: 20px;
+    color: white;
+    min-width: 100px;
+}
+
+.number {
+    color: #FF5733;
+    min-width: 60px;
+}
+
+.detail-button {
+    background-color: transparent;
+    color: #c4eafb;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 15px;
+    text-decoration: underline;
+}
+
+.container2 form button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.sell-button {
+    background-color: #FF5733;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* warriors.html styling */
+
+.container3 {
+    color: #ddd;
+    font-family: 'Arial', sans-serif;
+}
+
+.container3 .hero-name {
+    font-size: 1.5em;
+    color: #fff;
+    margin-bottom: 0.5em;
+    text-align: left;
+    font-family: "Galindo", sans-serif;
+    color: #FF5733;
+}
+
+.container3 .items {
+    margin-left: 20px;
+}
+
+.container3 .item-name {
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;
+    margin-right: 40px;
+    color: rgb(187, 187, 238);
+}
+
+.container3 .item-detail {
+    display: inline-block;
+    margin-right: 50px;
+    color: #fff;
+}
+
+/* fight.html */
+
+.chatbox {
+    /* max-width: 800px; */
+    height: 350px;
+    width:370px;
+    margin: auto;
+    padding: 20px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background: transparent;
+    border: 2px solid rgba(255,255,255, .2);
+    backdrop-filter: blur(50px);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+.chatbox h1 {
+    margin: 25px;
+    font-size: 35px;
+    color:#ddd;
+}
+
+.chatbox button{
+    margin: 25px;  
+}
+
+.chatbox button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.chatbox textarea {
+    margin: auto 20px;
+    width: 283px;
+    height: 250px;
+    justify-content: center;
+    align-items: center;
+}

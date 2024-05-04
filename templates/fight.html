@@ -5,34 +5,36 @@
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<h1>CHATS HERE</h1>
-<script type="text/javascript">
-    $(document).ready(function () {
+<div class="chatbox">
+    <h1>CHATS HERE</h1>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        var socket = io.connect('http://10.1.57.21:5000');
+            var socket = io.connect('http://10.1.57.21:5000');
 
-        socket.on('connect', function () {
-            socket.send('User has connected!');
+            socket.on('connect', function () {
+                socket.send('User has connected!');
+            });
+
+            socket.on('message', function (msg) {
+                $('#messages').append('<li>' + msg + '</li>');
+                console.log('Recieved message');
+            });
+
+            $('#sendbutton').on('click', function () {
+                socket.send($('#myMessage').val());
+                $('#myMessage').val('');
+            });
+
+
         });
-
-        socket.on('message', function (msg) {
-            $('#messages').append('<li>' + msg + '</li>');
-            console.log('Recieved message');
-        });
-
-        $('#sendbutton').on('click', function () {
-            socket.send($('#myMessage').val());
-            $('#myMessage').val('');
-        });
-
-
-    });
-</script>
-<ul id="messages">
-    {% for msg in messages %}
-    <li>{{msg}}</li>
-    {% endfor %}
-</ul>
-<input type="text" id="myMessage">
-<button id="sendbutton">Send</button>
+    </script>
+    <ul id="messages">
+        {% for msg in messages %}
+        <li>{{msg}}</li>
+        {% endfor %}
+    </ul>
+    <textarea type="text" id="myMessage" name="description" rows="4" cols="50"></textarea>
+    <button id="sendbutton">Send</button>
+</div>
 {% endblock %}
