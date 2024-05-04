@@ -32,8 +32,10 @@ def handleMsg(msg):
 
 
 
-
-@app.route('/fight')
+@app.route('/trade', methods = ["GET","POST"])
+def trade():
+    return render_template('trade.html')
+@app.route('/fight', methods = ["GET","POST"])
 def fight():
     return render_template("fight.html", messages = messages)
 
@@ -117,7 +119,6 @@ def buy_item():
 
 @app.route('/buy_hero', methods = ["GET","POST"])
 def buy_hero():
-    # Select * FROM heros 
     user_id = session["user"]
     #heros = SELECT * FROM heros;
     if request.method == "GET":
@@ -126,7 +127,7 @@ def buy_hero():
         heroid = int(request.form.get("hero_id"))
         hero = next((hero for hero in heroes if hero["heroid"] == heroid), None)
         price = hero.get("price")
-        # SELECT cash from user where userid = user_id
+        #cash =  SELECT cash from user where userid = user_id
         cash = 100  # temp
         if cash < price:
             return render_template("Apology.html", messages = "NOT ENOUGH CASH!!!")
