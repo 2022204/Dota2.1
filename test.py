@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
+import database_updated_file as db
+import os
+load_dotenv('.env.local')
 
-my_warriors = [
-    {"warriorid": 1, "itemid": 1}, {"warriorid": 1, "itemid": 2},
-    {"warriorid": 2, "itemid": 1}, {"warriorid": 2, "itemid": 3},
-    {"warriorid": 3, "itemid": 2}, {"warriorid": 3, "itemid": 3}
-]
+conn = db.establish_connection(os.getenv('uri'))
 
+rows = db.select_data(conn, f"SELECT * FROM users where user_id = {1}")
+
+print(rows)
+print(rows[0][0],rows[0][2])

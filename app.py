@@ -3,6 +3,12 @@ from helper import checkuser, hashed_password
 from flask_session import Session
 from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
+import database_updated_file as db
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env.local")
+conn = db.establish_connection(os.getenv("uri"))
 app = Flask(__name__)
 
 
@@ -134,7 +140,7 @@ def buy_hero():
         
         cash -= price
 
-        #Update cash from user where userid = user_id
+        #Update cash from user where userid = user_id, cash = new_cash
         #insert into owned_warriors ('user_id','hero_id') VALUES (user_id, heroid)
         return redirect("\index")
 
@@ -164,7 +170,6 @@ def login():
         else:
             hash = hashed_password(password) 
             # users = db.execute("SELECT * FROM users")
-            # 
             message, value = checkuser(users, username, hash)
             if message != None:
                 return render_template("Apology.html", message= message)
