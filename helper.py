@@ -9,7 +9,50 @@ def checkuser(users, username, password):
             return None, i["value"]
     
     return "Invalid username/password", 0
+def get_heroes(hero_list):
+    heroes = []
+    for item in hero_list:
+        hero_dict = {
+            'hero_id':item[0],
+            'heroname': item[1],
+            'description': item[3],
+            'health': item[4],
+            'armor': item[5],
+            'attackspeed': item[6],
+            'damage': item[7],
+            'cost': item[2]
+        }
+        heroes.append(hero_dict)
+    return heroes
+def get_items(item_list):
+    items = []
+    for item in item_list:
+        item_dict = {
+            'item_id':item[0],
+            'name': item[1],
+            'description': item[3],
+            'health': item[4],
+            'armor': item[5],
+            'attackspeed': item[6],
+            'damage': item[7],
+            'cost': item[2]
+        }
+        items.append(item_dict)
+    return items
 
+def get_history(history_list):
+    duels = []
+    for item in history_list:
+        duel_dict = {
+            'username': item[2],
+            'opponent': item[3].capitalize(),  # Capitalize opponent's name
+            'date': str(item[5]),  # Convert date to string
+            'time': item[4].strftime('%H:%M'),  # Format time as 'HH:MM'
+            'result': item[7],
+            'exchange': item[6]
+        }
+        duels.append(duel_dict)
+    return duels
 def hashed_password(password):
     """This will encrypt user's password"""
     mapped = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m']

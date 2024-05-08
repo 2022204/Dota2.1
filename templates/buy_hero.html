@@ -13,8 +13,7 @@
                     <th class="hero-attribute-head">Attack Speed</th>
                     <th class="hero-attribute-head">Damage</th>
                     <th class="hero-attribute-head">Armor</th>
-                    <th class="hero-attribute-head">Respawn Time</th>
-                    <th class="hero-attribute-head">Price</th>
+                    <th class="hero-attribute-head">Cost</th>
                     <th class="hero-action-head">Action</th>
                 </tr>
             </thead>
@@ -23,17 +22,16 @@
             <tr>
                 <td class="hero-attribute">{{ hero.health }}</td>
                 <td class="hero-attribute">{{ hero.attackspeed }}</td>
-                <td class="hero-attribute">{{ hero.Damage }}</td>
+                <td class="hero-attribute">{{ hero.damage }}</td>
                 <td class="hero-attribute">{{ hero.armor }}</td>
-                <td class="hero-attribute">{{ hero['respawn time'] }}</td>
-                <td class="hero-attribute">{{ hero.price }}</td>
+                <td class="hero-attribute">{{ hero.cost }}</td>
                 <td class="hero-action">
                     <form action="/buy_hero" method="post">
-                        <input type="hidden" name="hero_id" value="{{ hero.heroid }}">
+                        <input type="hidden" name="hero_id" value="{{ hero.hero_id }}">
                         <button type="submit" class="sell-button">Buy for {{hero.price}} only</button>
                     </form>
                     <form action="/details" method="post">
-                        <input type="hidden" name="hero_detail" value="{{hero.heroid}}">
+                        <input type="hidden" name="hero_detail" value="{{hero.hero_id}}">
                         <button type="submit" class="detail-button">View Details</button>
                     </form>
                 </td>

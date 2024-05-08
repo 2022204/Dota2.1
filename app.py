@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, url_for, redirect, request
-from helper import checkuser, hashed_password
+from helper import checkuser, hashed_password, get_history, get_heroes, get_items
 from flask_session import Session
 from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
@@ -37,6 +37,22 @@ def handleMsg(msg):
     messages.append(msg)
 
 
+@app.route("/warrior")
+def warriors():
+    userid = session["user"]
+    
+    ## Select Warrior Ids from users inventory
+    ## Select all items associate with the warriors
+    ## Write them into details datatype
+    details = []
+    for hero in [h for h in my_heros if h["username"] == userid]:
+        hero_details = {"heroname": hero["heroname"], "warrior_items": []}
+        for warrior in [w for w in my_warriors if w["warriorid"] == hero["warriorid"]]:
+            item = next(item for item in my_items if item["itemid"] == warrior["itemid"])
+            hero_details["warrior_items"].append({"itemid": warrior["itemid"], "details": item})
+        details.append(hero_details)
+
+    return render_template("warriors.html", details = details)
 
 @app.route('/trade', methods = ["GET","POST"])
 def trade():
@@ -105,42 +121,40 @@ items = [
 @app.route('/buy_item',methods = ["POST","GET"])
 def buy_item():
     user_id = session["user"]
-    #heros = SELECT * FROM heros;
+    item_list = get_items(db.select_data(conn, f"SELECT * FROM items"))
+
     if request.method == "GET":
-        return render_template("buy_item.html", items = items)
+        return render_template("buy_item.html", items = item_list)
     else:
-        itemid = int(request.form.get("item_id"))
-        item = next((item for item in items if item["itemid"] == itemid), None)
-        price = item.get("price")
-        # SELECT cash from user where userid = user_id
-        cash = 100  # temp
-        if cash < price:
+        item_id = int(request.form.get("item_id"))
+        cost = db.select_data(conn, f"SELECT cost from items WHERE item_id = %s",(item_id, ))[0][0]
+        cash =  db.select_data(conn , f"SELECT gold from users where user_id = %s", (user_id, ))[0][0]
+        if cash < cost:
             return render_template("Apology.html", messages = "NOT ENOUGH CASH!!!")
         
-        cash -= price
+        cash -= cost
 
-        #Update cash from user where userid = user_id
+        db.update_data(conn, f"Update users SET gold = %s where user_id = %s",(cash, user_id))
         #insert into owned_warriors ('user_id','hero_id') VALUES (user_id, heroid)
         return redirect("\index")
 
 @app.route('/buy_hero', methods = ["GET","POST"])
 def buy_hero():
     user_id = session["user"]
-    #heros = SELECT * FROM heros;
+    hero_list = get_heroes(db.select_data(conn, f"SELECT * FROM heroes"))
+
     if request.method == "GET":
-        return render_template("buy_hero.html", heroes = heroes)
+        return render_template("buy_hero.html", heroes = hero_list)
     else:
-        heroid = int(request.form.get("hero_id"))
-        hero = next((hero for hero in heroes if hero["heroid"] == heroid), None)
-        price = hero.get("price")
-        #cash =  SELECT cash from user where userid = user_id
-        cash = 100  # temp
-        if cash < price:
+        hero_id = int(request.form.get("hero_id"))
+        cost = db.select_data(conn, f"SELECT cost from heroes WHERE hero_id = %s",(hero_id, ))[0][0]
+        cash =  db.select_data(conn , f"SELECT gold from users where user_id = %s", (user_id, ))[0][0]
+        if cash < cost:
             return render_template("Apology.html", messages = "NOT ENOUGH CASH!!!")
         
-        cash -= price
+        cash -= cost
 
-        #Update cash from user where userid = user_id, cash = new_cash
+        db.update_data(conn, f"Update users SET gold = %s where user_id = %s",(cash, user_id))
         #insert into owned_warriors ('user_id','hero_id') VALUES (user_id, heroid)
         return redirect("\index")
 
@@ -169,14 +183,14 @@ def login():
             return render_template("Apology.html", message = "Must enter Password")
         else:
             hash = hashed_password(password) 
-            # users = db.execute("SELECT * FROM users")
-            message, value = checkuser(users, username, hash)
-            if message != None:
-                return render_template("Apology.html", message= message)
+            user_id = db.select_data(conn, f"SELECT user_id from users where username = %s AND password = %s", (username, hash))
+            if len(user_id) == 0:
+                return render_template("Apology.html", message = "Username/ Password doesn't match")
             else:
-                session["user"] = username   #replace with user_id later
-                my_duels = [duel for duel in duels if duel.get('username') == username]
-                return render_template("index.html", username = username, duels = my_duels)
+                session["user"] = user_id[0][0]
+                history = get_history(db.select_data(conn, f"SELECT * from history WHERE user_id = %s", (session["user"],)))
+
+                return render_template("index.html", username = username, duels = history)
         
 
 @app.route('/register', methods = ["GET","POST"])
@@ -186,14 +200,11 @@ def register():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
-        email = request.form.get("email")
         confirmation = request.form.get("confirmation")
         if not username:
             return render_template("Apology.html", message = "Must enter username")
         elif not password:
             return render_template("Apology.html", message = "Must enter Password")
-        elif not email:
-            return render_template("Apology.html", message = "Must enter email")
         elif not confirmation:
             return render_template("Apology.html", message = "Must Enter confirmation password")
         elif password != confirmation:
@@ -201,13 +212,19 @@ def register():
         else:
             hash = hashed_password(password)
 
-            # Insert into users //
-            users.append({"username":username, "password":hash, "value":0})
-            ##
+            data = {
+            "INSERT INTO users (username, password, gold) VALUES (%s, %s, %s)": [
+                (username, hash, 1000)
+            ]
+        }
+            table = "users"
+            
+            db.insert_data(conn, table, data)
 
-            session["user"] = username  #replace with user_id later
-            my_duels = [duel for duel in duels if duel.get('username') == username]
-            return render_template("index.html", username = username, duels = my_duels)
+            row = db.select_data(conn, f"SELECT user_id FROM users where username = %s AND password = %s",(username, password))
+            session["user"] = row[0][0]
+            
+            return render_template("index.html", username = username, duels = [])
 
 
 @app.route("/index")
@@ -217,11 +234,10 @@ def index():
         return redirect('/')
     
     user= session["user"]
-    ## Replace with SELECT history from histories where user_id = user;
-    my_duels = [duel for duel in duels if duel.get('username') == user]
-    ##
 
-    return render_template("index.html", username = user, duels = my_duels)
+    history = get_history(db.select_data(conn, f"SELECT * from history WHERE user_id = %s", (session["user"],)))
+
+    return render_template("index.html", username = user, duels = history)
 
 
 @app.route("/logout")
@@ -229,38 +245,6 @@ def logout():
     session.clear()
     return redirect("/")
 
-# Define data structures
-my_heros = [
-    {"username": "hasan", "heroname": "slardar", "warriorid": 1},
-    {"username": "hasan", "heroname": "sniper", "warriorid": 2},
-    {"username": "farza", "heroname": "slark", "warriorid": 3}
-]
-
-
-
-my_items = [
-    {"itemid": 1, "itemname":"item1","health": 200, "attack": 0, "damage": 0, "armor": 3},
-    {"itemid": 2, "itemname":"item2", "health": 0, "attack": 110, "damage": 230, "armor": 3},
-    {"itemid": 3, "itemname":"item3","health": 55, "attack": 55, "damage": 55, "armor": 5}
-]
-
-
-@app.route("/warrior")
-def warriors():
-    userid = session["user"]
-    
-    ## Select Warrior Ids from users inventory
-    ## Select all items associate with the warriors
-    ## Write them into details datatype
-    details = []
-    for hero in [h for h in my_heros if h["username"] == userid]:
-        hero_details = {"heroname": hero["heroname"], "warrior_items": []}
-        for warrior in [w for w in my_warriors if w["warriorid"] == hero["warriorid"]]:
-            item = next(item for item in my_items if item["itemid"] == warrior["itemid"])
-            hero_details["warrior_items"].append({"itemid": warrior["itemid"], "details": item})
-        details.append(hero_details)
-
-    return render_template("warriors.html", details = details)
 
 
 if __name__ == "__main__":

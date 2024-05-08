@@ -50,7 +50,7 @@ def insert_data(conn, table, data):
         cur = conn.cursor()
         for query, values in data.items():
             cur.executemany(query, values)
-        conn.commit()  # Commit the transaction after all data insertion
+        conn.commit()  
         print("Data inserted successfully.")
     except psycopg2.Error as e:
         print("Error: Unable to insert data.")
@@ -89,18 +89,23 @@ def delete_data(conn, query, values):
         # Close cursor
         cur.close()
 
-def select_data(conn, query):
+def select_data(conn, query, params=None):
     try:
         # Select data from the database
         cur = conn.cursor()
-        cur.execute(query)
+        if params:
+            cur.execute(query, params)
+        else:
+            cur.execute(query)
         rows = cur.fetchall()
         return rows
     except psycopg2.Error as e:
-        print("Error: Unable to select data.")
+        print("Error: Unable to fetch data.")
         print(e)
     finally:
+        # Close cursor
         cur.close()
+
 
 # # Example usage:
 # uri = "postgresql://dbms_owner:mWs2AfUrNK7T@ep-muddy-meadow-a5wol2jq.us-east-2.aws.neon.tech/dbms?sslmode=require"
