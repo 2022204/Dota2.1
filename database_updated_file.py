@@ -35,7 +35,7 @@ def execute_queries(conn, queries):
         cur = conn.cursor()
         for query in queries:
             cur.execute(query)
-            conn.commit()  # Commit each query
+            conn.commit()  
         print("Queries executed successfully.")
     except psycopg2.Error as e:
         print("Error: Unable to execute queries.")
@@ -46,7 +46,6 @@ def execute_queries(conn, queries):
 
 def insert_data(conn, table, data):
     try:
-        # Insert data into specified table
         cur = conn.cursor()
         for query, values in data.items():
             cur.executemany(query, values)
@@ -55,6 +54,8 @@ def insert_data(conn, table, data):
     except psycopg2.Error as e:
         print("Error: Unable to insert data.")
         print(e)
+        print("\n--------------------------------------------\n")
+
     finally:
         cur.close()
 
@@ -70,6 +71,7 @@ def update_data(conn, query, values):
     except psycopg2.Error as e:
         print("Error: Unable to update data.")
         print(e)
+        print("\n--------------------------------------------\n")
     finally:
         # Close cursor
         cur.close()
@@ -84,6 +86,7 @@ def delete_data(conn, query, values):
     except psycopg2.Error as e:
         print("Error: Unable to delete data.")
         print(e)
+        print("\n--------------------------------------------\n")    
     finally:
         # Close cursor
         cur.close()
@@ -104,48 +107,4 @@ def select_data(conn, query, params=None):
     finally:
         # Close cursor
         cur.close()
-
-
-# # Example usage:
-# uri = "postgresql://dbms_owner:mWs2AfUrNK7T@ep-muddy-meadow-a5wol2jq.us-east-2.aws.neon.tech/dbms?sslmode=require"
-# conn = establish_connection(uri)
-
-# if conn:
-#     # Example queries and data
-#     create_table_queries = [
-#         '''
-#         CREATE TABLE IF NOT EXISTS test_table (
-#             id SERIAL PRIMARY KEY,
-#             name VARCHAR(255)
-#         )
-#         '''
-#     ]
-#     execute_queries(conn, create_table_queries)
-
-#     insert_data_queries = {
-#     "INSERT INTO test_table (name) VALUES (%s)": [('John',), ('Alice',)]
-# }
-    
-#     insert_data(conn, "test_table", insert_data_queries)
-
-#     # Example update query
-#     update_query = "UPDATE test_table SET name = %s WHERE id = %s"
-#     update_values = ('Bob', 1)
-#     update_data(conn, update_query, update_values)
-
-#     # Example delete query
-#     delete_query = "DELETE FROM test_table WHERE id = %s"
-#     delete_values = (2,)
-#     delete_data(conn, delete_query, delete_values)
-
-#     # Example select query
-#     select_query = "SELECT * FROM test_table"
-#     select_data(conn, select_query)
-
-#     # Close connection
-#     conn.close()
-
-# query = "SELECT * FROM Heros"
-
-# print(select_data(conn, query))
 

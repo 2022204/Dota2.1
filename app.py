@@ -53,13 +53,17 @@ def sell():
         items = []
     else:
         items = get_items(db.select_data(conn, query, itemlist))
+
     cash =  db.select_data(conn , f"SELECT gold from users where user_id = %s", (user_id, ))[0][0]
+
     if request.method == "GET":
         return render_template("sell.html", items = items, gold = cash)
+    
     else:
         item_id = int(request.form.get("item_id"))
         price = db.select_data(conn, f"SELECT cost FROM items WHERE item_id = %s", (item_id, ))[0][0]
-        db.update_data(conn, f"Update users SET gold = %s where user_id = %s",(cash + price, user_id))
+        print("PRICE: ",price)
+        db.update_data(conn, f"Update users SET gold = %s where user_id = %s",(cash+price, user_id))
         db.delete_data(conn,f"DELETE FROM UserItems where user_id = %s AND item_id = %s", (user_id, item_id))
 
         return redirect('/index')
