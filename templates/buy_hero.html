@@ -3,12 +3,15 @@
 {% block title %} Sell Items {% endblock %}
 
 {% block body %}
+{% block gold %}{{gold}}{% endblock %}
 
 <div class="general">
     <div class="container2">
         <table class="hero-table">
             <thead>
                 <tr>
+                    <th class="hero-attribute-head">Name</th>
+                    <th class="hero-attribute-head">Description</th>
                     <th class="hero-attribute-head">Health</th>
                     <th class="hero-attribute-head">Attack Speed</th>
                     <th class="hero-attribute-head">Damage</th>
@@ -20,6 +23,9 @@
             <tbody>
         {% for hero in heroes %}
             <tr>
+                <td class="number">{{ loop.index }}</td>
+                <td class="hero-attribute">{{ hero.heroname }}</td>
+                <td class="hero-attribute">{{ hero.description }}</td>
                 <td class="hero-attribute">{{ hero.health }}</td>
                 <td class="hero-attribute">{{ hero.attackspeed }}</td>
                 <td class="hero-attribute">{{ hero.damage }}</td>
@@ -28,7 +34,7 @@
                 <td class="hero-action">
                     <form action="/buy_hero" method="post">
                         <input type="hidden" name="hero_id" value="{{ hero.hero_id }}">
-                        <button type="submit" class="sell-button">Buy for {{hero.price}} only</button>
+                        <button type="submit" class="sell-button">Buy for {{hero.cost}} only</button>
                     </form>
                     <form action="/details" method="post">
                         <input type="hidden" name="hero_detail" value="{{hero.hero_id}}">

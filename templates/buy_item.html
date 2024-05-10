@@ -3,15 +3,17 @@
 {% block title %} BUY Items {% endblock %}
 
 {% block body %}
-
+{% block gold %}{{gold}}{% endblock %}
 <div class="general">
     <div class="container2">
         <table class="item-table">
             <thead>
                 <tr>
                     <th class="number">#</th>
+                    <th class="item-attribute-head">Name</th>
+                    <th class="item-attribute-head">Description</th>
                     <th class="item-attribute-head">Health</th>
-                    <th class="item-attribute-head">Attack</th>
+                    <th class="item-attribute-head">Attack Speed</th>
                     <th class="item-attribute-head">Damage</th>
                     <th class="item-attribute-head">Armor</th>
                     <th class="item-action-head">Action</th>
@@ -21,15 +23,17 @@
             {% for item in items %}
             <tr>
                 <td class="number">{{ loop.index }}</td>
+                <td class="item-attribute">{{ item.name }}</td>
+                <td class="item-attribute">{{ item.description }}</td>
                 <td class="item-attribute">{{ item.health }}</td>
-                <td class="item-attribute">{{ item.attack }}</td>
+                <td class="item-attribute">{{ item.attackspeed }}</td>
                 <td class="item-attribute">{{ item.damage }}</td>
                 <td class="item-attribute">{{ item.armor }}</td>
                 <td class="item-action">
                     <!-- add 'view details icon here' -->
                     <form action="/buy_item" method="post">
-                        <input type="hidden" name="item_id" value="{{ item.itemid }}">
-                        <button type="submit" class="sell-button">buy for {{item.price}} ONLY</button>
+                        <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                        <button type="submit" class="sell-button">buy for {{item.cost}} ONLY</button>
                     </form>
                 </td>
             </tr>

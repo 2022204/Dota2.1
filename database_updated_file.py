@@ -56,7 +56,6 @@ def insert_data(conn, table, data):
         print("Error: Unable to insert data.")
         print(e)
     finally:
-        # Close cursor
         cur.close()
 
 
