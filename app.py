@@ -211,8 +211,10 @@ def fight():
     cash = db.select_data(
         conn, f"SELECT gold from users where user_id = %s", (user_id,)
     )[0][0]
+
     if request.method == "POST":
         action = request.form["action"]
+
         if action == "accept_challenge":
             challenge_id = request.form["challenge_id"]
             challenger_id = request.form["challenger_id"]
@@ -223,28 +225,44 @@ def fight():
                 request.form["item2"],
                 request.form["item3"],
             ]
-            cash = db.select_data(conn, f"SELECT gold FROM users WHERE user_id = %s", (challenger_id, ))[0][0]
-            if cash < gold:
-                db.delete_data(conn, f"DELETE FROM challenge_items WHERE challenge_id = %s", (challenge_id, ))
-                db.delete_data(conn, f"DELETE FROM challenges WHERE challenge_id = %s", (challenge_id, ))
-                return render_template("Apology.html", message = "Challenge No longer available. Request declined")
+            print(challenger_id, opponent_hero_id, items)
+            challenger_cash = db.select_data(
+                conn, f"SELECT gold FROM users WHERE user_id = %s", (challenger_id,)
+            )[0][0]
 
-            
-            your_hero_id = request.form["hero"]
-            
+            if challenger_cash < gold:
+                db.delete_data(
+                    conn,
+                    f"DELETE FROM challenge_items WHERE challenge_id = %s",
+                    (challenge_id,),
+                )
+                db.delete_data(
+                    conn,
+                    f"DELETE FROM challenges WHERE challenge_id = %s",
+                    (challenge_id,),
+                )
+                return render_template(
+                    "Apology.html",
+                    message="Challenge no longer available. Request declined",
+                )
+
+
         elif action == "challenge":
             hero_id = request.form["hero"]
             items = request.form.getlist("items[]")
             defender_id = request.form["user"]
             gold = int(request.form["gold"])
+
             if gold > cash:
                 return render_template(
                     "Apology.html", message="You don't have enough gold"
                 )
-            if len(items)>3:
+
+            if len(items) > 3:
                 return render_template(
-                    "Apology.html", message = "ONLY UPTO 3 ALLOWED"
+                    "Apology.html", message="Only up to 3 items are allowed"
                 )
+
             data = {
                 "INSERT INTO challenges (challenger_id, hero_id, defender_id, gold, status) VALUES (%s, %s, %s,%s,%s)": [
                     (user_id, hero_id, defender_id, gold, "pending")
@@ -258,9 +276,8 @@ def fight():
                 f"SELECT challenge_id FROM challenges WHERE challenger_id = %s AND hero_id = %s AND defender_id = %s AND status = 'pending'",
                 (user_id, hero_id, defender_id),
             )[0][0]
-            print(items)
+
             for item in items:
-                print(challenge_id, user_id, int(item))
                 data = {
                     "INSERT INTO challenge_items (challenge_id, user_id, item_id) VALUES (%s, %s, %s)": [
                         (challenge_id, user_id, int(item)),
@@ -268,6 +285,7 @@ def fight():
                 }
                 table = "challenge_items"
                 db.insert_data(conn, table, data)
+
         return redirect("/index")
     else:
         my_heroes = get_heroes(
@@ -320,7 +338,7 @@ WHERE
                 )
             )
         )
-        print(my_challenges)
+
         return render_template(
             "fight.html",
             users=users,
