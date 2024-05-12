@@ -30,7 +30,6 @@
               <td class="item-attribute">{{ item.damage }}</td>
               <td class="item-attribute">{{ item.armor }}</td>
               <td class="item-action">
-                  <!-- add 'view details icon here' -->
                   <form action="/sell" method="post">
                       <input type="hidden" name="item_id" value="{{ item.item_id }}">
                       <button type="submit" class="sell-button">SELL for {{item.cost}} ONLY</button>
