@@ -28,6 +28,35 @@ def difference_of_lists(list1, list2):
     
     return result_list
 
+def get_tradeOffers(offers_list):
+    offers = []
+    if offers_list == None:
+        return offers
+    for offer in offers_list:
+        offer_dict = {}
+        offer_dict["user_id"] = offer[0]
+        offer_dict["hero_id"] = offer[1]
+        offer_dict["offerer_username"] = offer[2]
+        offer_dict["hero_name"]=offer[3]
+        offer_dict["gold"] = offer[4]
+        offer_dict["status"] = offer[5]
+        offer_dict["offered_to"] = offer[6]
+        offers.append(offer_dict)
+    return offers
+
+def get_users(user_list):
+    users = []
+    if user_list == None:
+        return []
+    for i in user_list:
+        user_dict = {}
+        user_dict["user_id"] = i[0]
+        user_dict["gold"] = i[1]
+        user_dict["username"] = i[2]
+        users.append(user_dict)
+
+    return users
+
 def get_items_by_ids(items):
     itemlist = []
     if len(items) == None:

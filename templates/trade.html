@@ -1,0 +1,104 @@
+{% extends "main_index.html" %}
+
+{% block title %} TRADE HEROS {% endblock %}
+{% block gold %} {{gold}} {% endblock %}
+{% block body %}
+<style>
+    .trade-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .other-trade-offers p {
+        display: inline;
+    }
+
+    .trade-container>* {
+        margin-bottom: 20px;
+    }
+
+    .trade-form {
+        width: 50%;
+        max-width: 400px;
+    }
+</style>
+<div class="trade-container">
+    <div class="trade-offers">
+        <h2>Trade Offers</h2>
+        <form name="tradeaccept" method="post" action="/trade">
+            <div class="trade-offers">
+                {% for offer in trade_offers %}
+                <div class="trade-offer">
+                    <p><strong>User: </strong>{{ offer.offerer_username}}</p>
+                    <p><strong>Hero Name: </strong>{{ offer.hero_name }}</p>
+                    <p><strong>Price: </strong>{{ offer.gold }} Gold</p>
+                    <input type="hidden" name="hero_id" value="{{ offer.hero_id }}">
+                    <input type="hidden" name="user_id" value="{{ offer.user_id }}">
+                    <input type="hidden" name="gold" value="{{ offer.gold }}">
+                    <button type="submit" name="action" value="accept_trade">Accept Trade</button>
+                    <button type="submit" name="action" value="reject_trade">Reject Trade</button>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+    <hr>
+    <br>
+    <div class="available-users">
+        <h2>Submit Trade Offer</h2>
+        <div class="trade-form">
+            <form name="tradeOffer" method="post" action="/trade" onsubmit="return validateForm()">
+                <div class="form-input">
+                    <label for="user-id">Select User:</label>
+                    <select id="user-id" name="user_id" required>
+                        <option value="">Select a user</option>
+                        {% for user in users %}
+                        <option value="{{ user.user_id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-input">
+                    <label for="hero-name">Hero Name:</label>
+                    <select id="hero-name" name="hero_id" required>
+                        <option value="">Select a hero</option>
+                        {% for hero in heros %}
+                        <option value="{{ hero.hero_id }}">{{ hero.heroname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-input">
+                    <label for="gold">Gold:</label>
+                    <input type="number" id="gold" name="gold" min="0" required>
+                </div>
+                <button type="submit" name="action" value="offer_trade">Submit Trade</button>
+            </form>
+
+            <h2>Other Trades</h2>
+            <div class="other-offers">
+                {% for offer in other_offers %}
+                <div class="other-trade-offers">
+                    <p><strong>Trade Offerer: </strong>{{ offer.offerer_username}}</p>
+                    <p><strong>Hero Name: </strong>{{ offer.hero_name }}</p>
+                    <p><strong>Offered To: </strong>{{offer.offered_to}}</p>
+                    <p><strong>Status: </strong>{{ offer.status }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <script>
+                function validateForm() {
+                    const userId = document.getElementById("user-id").value;
+                    const heroId = document.getElementById("hero-name").value;
+                    const gold = document.getElementById("gold").value;
+
+                    if (userId == "" || heroId == "" || gold == "") {
+                        alert("Please fill in all fields.");
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+
+            {% endblock %}
