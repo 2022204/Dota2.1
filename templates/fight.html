@@ -1,42 +1,97 @@
 {% extends "main_index.html" %}
-{% block title %} Fight page
-{% endblock %}
-{% block body %}
+{% block title %} Fight page {% endblock %}
 {% block gold %}{{gold}}{% endblock %}
+{% block body %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th,
+    td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
 
-<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    th {
+        background-color: #f2f2f2;
+    }
 
-<div class="chatbox">
-    <h1>CHATS HERE</h1>
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            var socket = io.connect('http://10.1.57.21:5000');
-
-            socket.on('connect', function () {
-                socket.send('User has connected!');
-            });
-
-            socket.on('message', function (msg) {
-                $('#messages').append('<li>' + msg + '</li>');
-                console.log('Recieved message');
-            });
-
-            $('#sendbutton').on('click', function () {
-                socket.send($('#myMessage').val());
-                $('#myMessage').val('');
-            });
-
-
-        });
-    </script>
-    <ul id="messages">
-        {% for msg in messages %}
-        <li>{{msg}}</li>
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+    }
+</style>
+<h1> Choose Avatar and Items</h1>
+<form action="/fight" method="post">
+    <label for="hero">Select Hero:</label>
+    <select id="hero" name="hero" required>
+        <option value="" disabled selected>Select Hero</option>
+        {% for hero in heroes %}
+        <option value="{{ hero.hero_id }}">{{ hero.heroname }}</option>
         {% endfor %}
-    </ul>
-    <textarea type="text" id="myMessage" name="description" rows="4" cols="50"></textarea>
-    <button id="sendbutton">Send</button>
-</div>
+    </select><br><br>
+    <label for="items">Select Items (up to 3):</label><br>
+    {% for item in items %}
+    <input type="checkbox" id="{{ item.item_id }}" name="items[]" value="{{ item.item_id }}">
+    <label for="{{ item.item_id }}">{{ item.name }}</label><br>
+    {% endfor %}
+    <br>
+    <!-- Hidden input fields for distinguishing between accepting and issuing challenges -->
+    {% for challenge in challenges %}
+    <input type="hidden" name="accept_challenge[{{ challenge.challenge_id }}]" value="accept">
+    {% endfor %}
+    <input type="hidden" name="issue_challenge" value="issue">
+</form>
+
+<h1>Challenge List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Hero Name</th>
+            <th>Win amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for challenge in challenges %}
+        <tr>
+            <form action="/fight" method="post" name="challenges">
+                <input type="hidden" name="challenge_id" value = {{challenge.challenge_id}}>
+                <input type="hidden" name="challenger_id" value="{{ challenge.challenger_id }}">
+                <input type="hidden" name="opponent_hero_id" value="{{ challenge.hero_id}}">
+                <input type="hidden" name="item1" value="{{ challenge.item_1_id }}">
+                <input type="hidden" name="item2" value="{{ challenge.item_2_id }}">
+                <input type="hidden" name="item3" value="{{ challenge.item_3_id }}">
+                <input type="hidden" name="gold" value="{{challenge.gold}}">
+                <input type="hidden" name="action" value="none">
+                <td>{{ challenge.challenger_username }}</td>
+                <td>{{ challenge.hero_name }}</td>
+                <td>{{challenge.gold}}</td>
+                <td>
+                    <button type="submit" name="action" value="accept_challenge">Accept Challenge</button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<h2>Challenge Others</h2>
+<form id="challengeForm" action="/fight" method="post">
+    <label for="user">Select User:</label>
+    <select id="user" name="user" required>
+        <option value="" disabled selected>Select User</option>
+        {% for user in users %}
+        <option value="{{ user.user_id }}">{{ user.username }}</option>
+        {% endfor %}
+    </select><br><br>
+    <label for="gold">Offer Gold:</label>
+    <input type="number" id="gold" name="gold" min="0" required><br><br>
+    <button type="submit" name="action" value="challenge">Challenge</button>
+</form>
+
 {% endblock %}

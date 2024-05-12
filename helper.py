@@ -10,6 +10,61 @@ def checkuser(users, username, password):
     
     return "Invalid username/password", 0
 
+
+def get_challenges(challenges):
+    my_challenge = []
+    if challenges == None:
+        return []
+    for challenge in challenges:
+        challenge_dict = {}
+        challenge_dict["challenger_username"] = challenge[0]
+        challenge_dict["hero_name"] = challenge[1]
+        challenge_dict["hero_id"] = challenge[2]
+        challenge_dict["gold"] = challenge[3]
+        challenge_dict["challenger_id"] = challenge[4]
+        challenge_dict["challenge_id"] = challenge[5]
+        challenge_dict["item_name"] = challenge[6]
+        challenge_dict["item_id"] = challenge[7]
+        my_challenge.append(challenge_dict)
+
+    return my_challenge
+
+
+def merge_items_by_challenge(challenges):
+    items_by_challenge = {}
+    
+    for challenge in challenges:
+        challenge_id = challenge['challenge_id']
+        if challenge_id not in items_by_challenge:
+            items_by_challenge[challenge_id] = {
+                'challenger_username': challenge['challenger_username'],
+                'hero_name': challenge['hero_name'],
+                'hero_id': challenge['hero_id'],
+                'gold': challenge['gold'],
+                'challenger_id': challenge['challenger_id'],
+                'challenge_id': challenge_id,
+                'item_1_id': challenge['item_id'],
+                'item_1_name': challenge['item_name'],
+                'item_2_id': None,
+                'item_2_name': 'None',
+                'item_3_id': None,
+                'item_3_name': 'None'
+            }
+        else:
+            if items_by_challenge[challenge_id]['item_2_id'] is None:
+                items_by_challenge[challenge_id]['item_2_id'] = challenge['item_id']
+                items_by_challenge[challenge_id]['item_2_name'] = challenge['item_name']
+            elif items_by_challenge[challenge_id]['item_3_id'] is None:
+                items_by_challenge[challenge_id]['item_3_id'] = challenge['item_id']
+                items_by_challenge[challenge_id]['item_3_name'] = challenge['item_name']
+    
+    merged_challenges = list(items_by_challenge.values())
+    
+    return merged_challenges
+
+def calculate_attributes(hero, item_1, item_2, item_3):
+    """
+    """
 def difference_of_lists(list1, list2):
     if len(list1) == None:
         return []

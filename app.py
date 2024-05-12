@@ -8,6 +8,8 @@ from helper import (
     get_items_by_ids,
     get_tradeOffers,
     get_users,
+    get_challenges,
+    merge_items_by_challenge,
 )
 from flask_session import Session
 from flask_socketio import SocketIO, send
@@ -203,9 +205,130 @@ FROM
         )
 
 
-@app.route("/fight", methods=["GET", "POST"])
+@app.route("/fight", methods=["POST", "GET"])
 def fight():
-    return render_template("fight.html", messages=messages)
+    user_id = session["user"]
+    cash = db.select_data(
+        conn, f"SELECT gold from users where user_id = %s", (user_id,)
+    )[0][0]
+    if request.method == "POST":
+        action = request.form["action"]
+        if action == "accept_challenge":
+            challenge_id = request.form["challenge_id"]
+            challenger_id = request.form["challenger_id"]
+            opponent_hero_id = request.form["opponent_hero_id"]
+            gold = request.form["gold"]
+            items = [
+                request.form["item1"],
+                request.form["item2"],
+                request.form["item3"],
+            ]
+            cash = db.select_data(conn, f"SELECT gold FROM users WHERE user_id = %s", (challenger_id, ))[0][0]
+            if cash < gold:
+                db.delete_data(conn, f"DELETE FROM challenge_items WHERE challenge_id = %s", (challenge_id, ))
+                db.delete_data(conn, f"DELETE FROM challenges WHERE challenge_id = %s", (challenge_id, ))
+                return render_template("Apology.html", message = "Challenge No longer available. Request declined")
+
+            
+            your_hero_id = request.form["hero"]
+            
+        elif action == "challenge":
+            hero_id = request.form["hero"]
+            items = request.form.getlist("items[]")
+            defender_id = request.form["user"]
+            gold = int(request.form["gold"])
+            if gold > cash:
+                return render_template(
+                    "Apology.html", message="You don't have enough gold"
+                )
+            if len(items)>3:
+                return render_template(
+                    "Apology.html", message = "ONLY UPTO 3 ALLOWED"
+                )
+            data = {
+                "INSERT INTO challenges (challenger_id, hero_id, defender_id, gold, status) VALUES (%s, %s, %s,%s,%s)": [
+                    (user_id, hero_id, defender_id, gold, "pending")
+                ]
+            }
+            table = "challenges"
+            db.insert_data(conn, table, data)
+
+            challenge_id = db.select_data(
+                conn,
+                f"SELECT challenge_id FROM challenges WHERE challenger_id = %s AND hero_id = %s AND defender_id = %s AND status = 'pending'",
+                (user_id, hero_id, defender_id),
+            )[0][0]
+            print(items)
+            for item in items:
+                print(challenge_id, user_id, int(item))
+                data = {
+                    "INSERT INTO challenge_items (challenge_id, user_id, item_id) VALUES (%s, %s, %s)": [
+                        (challenge_id, user_id, int(item)),
+                    ]
+                }
+                table = "challenge_items"
+                db.insert_data(conn, table, data)
+        return redirect("/index")
+    else:
+        my_heroes = get_heroes(
+            db.select_data(
+                conn,
+                f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM Userheroes WHERE user_id = %s)",
+                (user_id,),
+            )
+        )
+        my_items = get_items(
+            db.select_data(
+                conn,
+                f"SELECT * from items WHERE item_id in (SELECT item_id FROM UserItems Where user_id = %s)",
+                (user_id,),
+            )
+        )
+        users = get_users(
+            db.select_data(
+                conn,
+                f"SELECT * FROM users where user_id IN (SELECT user_id from users where user_id != %s)",
+                (user_id,),
+            )
+        )
+        my_challenges = merge_items_by_challenge(
+            get_challenges(
+                db.select_data(
+                    conn,
+                    f"""SELECT 
+    u1.username, 
+    h1.name AS hero_name, 
+    c.hero_id, 
+    c.gold, 
+    c.challenger_id, 
+    c.challenge_id,
+    I.name AS item_name, 
+    ci.item_id 
+FROM 
+    challenges AS c
+JOIN 
+    users AS u1 ON u1.user_id = c.challenger_id 
+JOIN 
+    heroes AS h1 ON h1.hero_id = c.hero_id
+JOIN 
+    challenge_items AS ci ON c.challenge_id = ci.challenge_id
+JOIN 
+    items AS I ON ci.item_id = I.item_id
+WHERE 
+    c.defender_id = %s""",
+                    (user_id,),
+                )
+            )
+        )
+        print(my_challenges)
+        return render_template(
+            "fight.html",
+            users=users,
+            heroes=my_heroes,
+            items=my_items,
+            challenges=my_challenges,
+            gold=cash,
+        )
 
 
 @app.after_request
