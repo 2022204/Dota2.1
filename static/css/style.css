@@ -13,6 +13,7 @@ body {
     /* background: rgb(52, 52, 52); */
     background: url('static/images/bck.jpg') no-repeat;
     background-size: cover;
+    background-attachment: fixed;
     background-position: center;
     display: flex;
     flex-direction: column;

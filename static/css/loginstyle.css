@@ -11,7 +11,8 @@ body {
     align-items: center;
     min-height: 100vh ;
     /* background: rgb(52, 52, 52); */
-    background: url('/static/images/bck.jpg') no-repeat;
+    background: url('/static/images/bck.jpg');
+    background-attachment: fixed;
     background-size: cover;     /*background image always fits the div*/
     background-position: center;
     display: flex;      /*flex property sets your container to be a flexbox element */
@@ -31,6 +32,8 @@ nav {
     padding-top: 40px;
     padding-left: 10%;
     padding-right: 10%;
+    background-attachment: fixed;
+
 }
 
 .logo a{

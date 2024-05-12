@@ -1,45 +1,44 @@
 {% extends "main_index.html" %}
 
-{% block title %} TRADE HEROS {% endblock %}
-
-{% block body %}
+{% block title %} SELL items {% endblock %}
 {% block gold %} {{gold}} {% endblock %}
-<style>
-    .trade-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  justify-content: center; 
-  height: 100vh; 
-}
-
-.trade-container > * {
-  margin-bottom: 20px; 
-}
-
-.trade-form {
-  width: 50%; 
-  max-width: 400px; 
-}
-</style>
-  <div class="trade-container">
-    <div class="trade-offers">
-      <h2>Trade Offers</h2>
-      <form name="tradeaccept" method="post" action="/trade">
-        <div class="trade-offers">
-          {% for offer in trade_offers %}
-          <div class="trade-offer">
-            <p><strong>User: </strong>{{ offer.username }}</p>
-            <p><strong>Hero Name: </strong>{{ offer.hero_name }}</p>
-            <p><strong>Price: </strong>{{ offer.price }} Gold</p>
-            <input type="hidden" name="hero_id" value="{{ offer.hero_id }}">
-            <input type="hidden" name="user_id" value="{{ offer.user_id }}">
-            <input type="hidden" name="gold" value="{{ offer.price }}">
-            <button type="submit" name="action" value="accept_trade">Accept Trade</button>
-          </div>
+{% block body %}
+<div class="general">
+  <h1>SELL ITEMS HERE</h1>
+  <div class="container2">
+      <table class="item-table">
+          <thead>
+              <tr>
+                  <th class="number">#</th>
+                  <th class="item-attribute-head">Name</th>
+                  <th class="item-attribute-head">Description</th>
+                  <th class="item-attribute-head">Health</th>
+                  <th class="item-attribute-head">Attack Speed</th>
+                  <th class="item-attribute-head">Damage</th>
+                  <th class="item-attribute-head">Armor</th>
+                  <th class="item-action-head">Action</th>
+              </tr>
+          </thead>
+          <tbody>
+          {% for item in items %}
+          <tr>
+              <td class="number">{{ loop.index }}</td>
+              <td class="item-attribute">{{ item.name }}</td>
+              <td class="item-attribute">{{ item.description }}</td>
+              <td class="item-attribute">{{ item.health }}</td>
+              <td class="item-attribute">{{ item.attackspeed }}</td>
+              <td class="item-attribute">{{ item.damage }}</td>
+              <td class="item-attribute">{{ item.armor }}</td>
+              <td class="item-action">
+                  <!-- add 'view details icon here' -->
+                  <form action="/sell" method="post">
+                      <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                      <button type="submit" class="sell-button">SELL for {{item.cost}} ONLY</button>
+                  </form>
+              </td>
+          </tr>
           {% endfor %}
-        </div>
-      </form>
-    </div>
+          </tbody>
+      </table>
   
 {% endblock %}

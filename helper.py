@@ -20,7 +20,7 @@ def difference_of_lists(list1, list2):
     for i in list1:
         list_1.append(i[0])
     for i in list2:
-        list2.append(i[0])
+        list_2.append(i[0])
         
     set2 = set(list_2)
     

@@ -53,7 +53,7 @@ def handle_trade():
             }
             table = "tradeOffers"
             db.insert_data(conn, table, data)
-            return redirect('/index')
+
         elif action == "accept_trade":
             offerer_user_id = request.form.get("user_id")
             hero_id = request.form.get("hero_id")
@@ -64,15 +64,17 @@ def handle_trade():
                 SELECT 1 FROM Userheroes
                 WHERE user_id = %s AND hero_id = %s
                 )""",
-                (offerer_user_id, hero_id)
+                (offerer_user_id, hero_id),
             )
             if not not_sold:
                 db.update_data(
-                conn,
-                f"UPDATE tradeOffers SET status = 'accepted' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
-                (offerer_user_id, hero_id, user_id),
+                    conn,
+                    f"UPDATE tradeOffers SET status = 'accepted' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
+                    (offerer_user_id, hero_id, user_id),
                 )
-                return render_template("Apology.html", message = "Sorry. This hero is NO longer available.")
+                return render_template(
+                    "Apology.html", message="Sorry. This hero is NO longer available."
+                )
             have_hero = db.select_data(
                 conn,
                 f"""SELECT EXISTS (
@@ -85,7 +87,7 @@ def handle_trade():
             print(have_hero)
             if have_hero:
                 return render_template(
-                    "Apology.html", message="You already have this hero"
+                    "Apology.html", message="You already have this hero. Can't buy multiple heros"
                 )
 
             cash = db.select_data(
@@ -123,6 +125,11 @@ def handle_trade():
                 f"UPDATE tradeOffers SET status = 'accepted' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
                 (offerer_user_id, hero_id, user_id),
             )
+            db.update_data(
+                conn, 
+                f"UPDATE tradeOffers SET status = 'sold' WHERE user_id = %s AND hero_id = %s AND offered_to != %s AND status != 'accepted'",
+                (offerer_user_id, hero_id, user_id)
+            )
 
         elif action == "reject_trade":
             user_id_offer = request.form.get("user_id")
@@ -134,9 +141,6 @@ def handle_trade():
                 (user_id_offer, hero_id, user_id),
             )
 
-            print(
-                f"Trade Rejected: FROM User {user_id} for hero {hero_id} at {gold} gold."
-            )
 
         return redirect("/index")
 
@@ -162,7 +166,13 @@ FROM
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
         )[0][0]
 
-        heros = get_heroes(db.select_data(conn, f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM Userheroes WHERE user_id = %s)", (user_id, )))
+        heros = get_heroes(
+            db.select_data(
+                conn,
+                f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM Userheroes WHERE user_id = %s)",
+                (user_id,),
+            )
+        )
         users = get_users(
             db.select_data(conn, f"SELECT * FROM users WHERE user_id != %s", (user_id,))
         )
@@ -247,7 +257,7 @@ def sell():
 @app.route("/buy_item", methods=["POST", "GET"])
 def buy_item():
     user_id = session["user"]
-    item_list = get_items(db.select_data(conn, f"SELECT * FROM items"))
+    item_list = get_items(db.select_data(conn, f"SELECT * FROM items WHERE item_id NOT IN (SELECT item_id FROM UserItems WHERE user_id = %s)", (user_id, )))
     if request.method == "GET":
         cash = db.select_data(
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
@@ -287,7 +297,7 @@ def buy_item():
 @app.route("/buy_hero", methods=["GET", "POST"])
 def buy_hero():
     user_id = session["user"]
-    hero_list = get_heroes(db.select_data(conn, f"SELECT * FROM heroes"))
+    hero_list = get_heroes(db.select_data(conn, f"SELECT * FROM heroes WHERE hero_id NOT IN (SELECT hero_id FROM UserHeroes WHERE user_id = %s)", (user_id, )))
 
     if request.method == "GET":
         cash = db.select_data(
@@ -388,6 +398,17 @@ def register():
         else:
             hash = hashed_password(password)
 
+            exists = db.select_data(
+                conn, 
+                f"""SELECT EXISTS (
+                SELECT 1
+                FROM users
+                WHERE username = %s
+                )""",
+                (username, ))[0][0]
+            if exists:
+                return render_template("Apology.html", message = "This username already exists")
+            
             data = {
                 "INSERT INTO users (username, password, gold) VALUES (%s, %s, %s)": [
                     (username, hash, 1000)

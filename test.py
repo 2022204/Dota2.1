@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import database_updated_file as db
 import os
-from helper import hashed_password, get_history, get_heroes, get_items_by_ids, get_items, get_list, get_tradeOffers, get_users
+from helper import hashed_password, get_history, get_heroes, get_items_by_ids, get_items, get_list, get_tradeOffers, get_users, difference_of_lists
 load_dotenv('.env.local')
 
 conn = db.establish_connection(os.getenv('uri'))
@@ -24,4 +24,16 @@ user_id = 5
 
 # print(get_heroes(db.select_data(conn, f"SELECT * FROM heroes")))
 # print(get_users(db.select_data(conn, f"SELECT * FROM users WHERE user_id != %s", (user_id, ))))
-print(get_heroes(db.select_data(conn, f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM Userheroes WHERE user_id = %s)", (user_id, ))))
+# print(get_heroes(db.select_data(conn, f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM Userheroes WHERE user_id = %s)", (user_id, ))))
+# ALL_item_list = db.select_data(conn, f"SELECT item_id FROM items")
+# my_item_list = db.select_data(conn, f"SELECT item_id from Useritems where user_id = %s",(user_id, ))
+
+# print(ALL_item_list, "\n", my_item_list)
+
+# remaining_items = (difference_of_lists(ALL_item_list, my_item_list))
+
+# print(db.select_data(conn, f"SELECT * FROM items where"))
+
+hero_list = get_heroes(db.select_data(conn, f"SELECT * FROM heroes WHERE hero_id IN (SELECT hero_id FROM UserHeroes WHERE user_id = %s)", (user_id, )))
+
+print(hero_list)
