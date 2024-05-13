@@ -17,17 +17,19 @@
                             <th scope="col">vs</th>
                             <th scope="col">Opponent</th>
                             <th scope="col">Time</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Result</th>
                             <th scope="col">Gold exchange</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for duel in duels %}
-                        <tr class="{{ 'table-success' if duel.result == 'Won' else 'table-danger' }}">
+                        <tr class="{{ 'table-success' if duel.result == 'won' else 'table-danger' }}">
                             <td>You</td>
                             <td>vs</td>
                             <td>{{ duel.opponent }}</td>
-                            <td>{{ duel.time }}</td>
+                            <td>{{ duel.time}}</td>
+                            <td>{{ duel.date}}</td>
                             <td>{{ duel.result }}</td>
                             <td>{{ duel.exchange }}</td>
                         </tr>

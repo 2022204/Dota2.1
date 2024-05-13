@@ -40,8 +40,9 @@
     <tbody>
         {% for challenge in challenges %}
         <tr>
-            <form action="/fight" method="post" name="challenges">
+            <form id= "AcceptChallenge" action="/fight" method="post" name="challenges">
                 <input type="hidden" name="challenge_id" value = "{{challenge.challenge_id}}">
+                <input type = "hidden" name = "challenger_username" value = "{{challenge.challenger_username}}">
                 <input type="hidden" name="challenger_id" value="{{ challenge.challenger_id }}">
                 <input type="hidden" name="opponent_hero_id" value="{{ challenge.hero_id}}">
                 <input type="hidden" name="item1" value="{{ challenge.item_1_id }}">

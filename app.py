@@ -11,6 +11,10 @@ from helper import (
     get_challenges,
     merge_items_by_challenge,
 )
+from fight import and_the_winner_is
+import json
+from datetime import datetime
+
 from flask_session import Session
 from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
@@ -214,40 +218,7 @@ def fight():
 
     if request.method == "POST":
         action = request.form["action"]
-
-        if action == "accept_challenge":
-            challenge_id = request.form["challenge_id"]
-            challenger_id = request.form["challenger_id"]
-            opponent_hero_id = request.form["opponent_hero_id"]
-            gold = request.form["gold"]
-            items = [
-                request.form["item1"],
-                request.form["item2"],
-                request.form["item3"],
-            ]
-            print(challenger_id, opponent_hero_id, items)
-            challenger_cash = db.select_data(
-                conn, f"SELECT gold FROM users WHERE user_id = %s", (challenger_id,)
-            )[0][0]
-
-            if challenger_cash < gold:
-                db.delete_data(
-                    conn,
-                    f"DELETE FROM challenge_items WHERE challenge_id = %s",
-                    (challenge_id,),
-                )
-                db.delete_data(
-                    conn,
-                    f"DELETE FROM challenges WHERE challenge_id = %s",
-                    (challenge_id,),
-                )
-                return render_template(
-                    "Apology.html",
-                    message="Challenge no longer available. Request declined",
-                )
-
-
-        elif action == "challenge":
+        if action == "challenge":
             hero_id = request.form["hero"]
             items = request.form.getlist("items[]")
             defender_id = request.form["user"]
@@ -286,7 +257,124 @@ def fight():
                 table = "challenge_items"
                 db.insert_data(conn, table, data)
 
-        return redirect("/index")
+            return redirect("/index")
+        else:
+            challenge_id = request.form["challenge_id"]
+            challenger_id = request.form["challenger_id"]
+            opponent_hero_id = request.form["opponent_hero_id"]
+            challenger_username = request.form["challenger_username"]
+            gold = int(request.form["gold"])
+            items = [
+                request.form["item1"],
+                request.form["item2"],
+                request.form["item3"],
+            ]
+            user_data = db.select_data(
+                conn, f"SELECT username, gold FROM users WHERE user_id = %s", (user_id,)
+            )[0]
+            username = user_data[0]
+            cash = user_data[1]
+
+            challenger_cash = db.select_data(
+                conn, f"SELECT gold FROM users WHERE user_id = %s", (challenger_id,)
+            )[0][0]
+
+            if challenger_cash < gold:
+                db.delete_data(
+                    conn,
+                    f"DELETE FROM challenge_items WHERE challenge_id = %s",
+                    (challenge_id,),
+                )
+                db.delete_data(
+                    conn,
+                    f"DELETE FROM challenges WHERE challenge_id = %s",
+                    (challenge_id,),
+                )
+                return render_template(
+                    "Apology.html",
+                    message="Challenge no longer available. Request declined",
+                )
+            elif cash < gold:
+                return render_template(
+                    "Apology.html",
+                    message="You don't have enough money for this challenge",
+                )
+
+            my_hero = request.form["hero"]
+            my_items = request.form.getlist("items[]")
+            opponent = {
+                "user_id": challenger_id,
+                "username": challenger_username,
+                "hero_name": "",
+                "health": 0,
+                "armor": 0,
+                "attackspeed": 0,
+                "damage": 0,
+            }
+            me = {
+                "user_id": user_id,
+                "username": username,
+                "hero_name": "",
+                "health": 0,
+                "armor": 0,
+                "attackspeed": 0,
+                "damage": 0,
+            }
+            opponent_hero = get_heroes(
+                db.select_data(
+                    conn,
+                    f"SELECT * FROM heroes where hero_id = %s",
+                    (opponent_hero_id,),
+                )
+            )[0]
+            opponent["hero_name"] = opponent_hero["heroname"]
+            opponent["health"] += opponent_hero["health"]
+            opponent["armor"] += opponent_hero["armor"]
+            opponent["damage"] += opponent_hero["damage"]
+            opponent["attackspeed"] += opponent_hero["attackspeed"]
+            for i in items:
+                if i != "None":
+                    item = get_items(
+                        db.select_data(
+                            conn, f"SELECT * FROM items WHERE item_id = %s", (i,)
+                        )
+                    )[0]
+                    opponent["health"] += item["health"]
+                    opponent["armor"] += item["armor"]
+                    opponent["attackspeed"] += item["attackspeed"]
+                    opponent["damage"] += item["damage"]
+
+            my_hero = get_heroes(
+                db.select_data(
+                    conn, f"SELECT * FROM heroes where hero_id = %s", (my_hero,)
+                )
+            )[0]
+            me["hero_name"] = my_hero["heroname"]
+
+            me["health"] += my_hero["health"]
+            me["armor"] += my_hero["armor"]
+            me["damage"] += my_hero["damage"]
+            me["attackspeed"] += my_hero["attackspeed"]
+            for i in my_items:
+                if i != "None":
+                    item = get_items(
+                        db.select_data(
+                            conn, f"SELECT * FROM items WHERE item_id = %s", (i,)
+                        )
+                    )[0]
+                    me["health"] += item["health"]
+                    me["armor"] += item["armor"]
+                    me["attackspeed"] += item["attackspeed"]
+                    me["damage"] += item["damage"]
+
+            return render_template(
+                "fighting.html",
+                me=me,
+                opponent=opponent,
+                gold=cash,
+                challenge_id=challenge_id,
+                win_amount=gold,
+            )
     else:
         my_heroes = get_heroes(
             db.select_data(
@@ -314,31 +402,31 @@ def fight():
                 db.select_data(
                     conn,
                     f"""SELECT 
-    u1.username, 
-    h1.name AS hero_name, 
-    c.hero_id, 
-    c.gold, 
-    c.challenger_id, 
-    c.challenge_id,
-    I.name AS item_name, 
-    ci.item_id 
-FROM 
-    challenges AS c
-JOIN 
-    users AS u1 ON u1.user_id = c.challenger_id 
-JOIN 
-    heroes AS h1 ON h1.hero_id = c.hero_id
-JOIN 
-    challenge_items AS ci ON c.challenge_id = ci.challenge_id
-JOIN 
-    items AS I ON ci.item_id = I.item_id
-WHERE 
-    c.defender_id = %s""",
+                u1.username, 
+                h1.name AS hero_name, 
+                c.hero_id, 
+                c.gold, 
+                c.challenger_id, 
+                c.challenge_id,
+                I.name AS item_name, 
+                ci.item_id 
+            FROM 
+                challenges AS c
+            JOIN 
+                users AS u1 ON u1.user_id = c.challenger_id 
+            JOIN 
+                heroes AS h1 ON h1.hero_id = c.hero_id
+            JOIN 
+                challenge_items AS ci ON c.challenge_id = ci.challenge_id
+            JOIN 
+                items AS I ON ci.item_id = I.item_id
+            WHERE 
+                c.defender_id = %s AND c.status = pending""",
                     (user_id,),
                 )
             )
         )
-
+        print(my_challenges)
         return render_template(
             "fight.html",
             users=users,
@@ -356,6 +444,104 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+
+@app.route("/fighting", methods=["POST"])
+def fighting():
+    user_id = session["user"]
+    current_datetime = datetime.now()
+    current_date = current_datetime.strftime("%Y-%m-%d")
+    current_time = current_datetime.strftime("%H:%M:%S")
+
+    form_data = request.form.to_dict()
+    me_user_id = form_data.get("me_user_id")
+    me_username = form_data.get("me_username")
+    me_hero_name = form_data.get("me_hero_name")
+    me_health = int(form_data.get("me_health"))
+    me_armor = int(form_data.get("me_armor"))
+    me_damage = int(form_data.get("me_damage"))
+    me_attackspeed = float(form_data.get("me_attackspeed"))
+
+    opponent_user_id = form_data.get("opponent_user_id")
+    opponent_username = form_data.get("opponent_username")
+    opponent_hero_name = form_data.get("opponent_hero_name")
+    opponent_health = int(form_data.get("opponent_health"))
+    opponent_armor = int(form_data.get("opponent_armor"))
+    opponent_damage = int(form_data.get("opponent_damage"))
+    opponent_attackspeed = float(form_data.get("opponent_attackspeed"))
+
+    challenge_id = form_data.get("challenge_id")
+    amount = int(form_data.get("win_amount"))
+
+    me = {
+        "user_id": me_user_id,
+        "username": me_username,
+        "hero_name": me_hero_name,
+        "health": me_health,
+        "armor": me_armor,
+        "damage": me_damage,
+        "attackspeed": me_attackspeed,
+    }
+    opponent = {
+        "user_id": opponent_user_id,
+        "username": opponent_username,
+        "hero_name": opponent_hero_name,
+        "health": opponent_health,
+        "armor": opponent_armor,
+        "damage": opponent_damage,
+        "attackspeed": opponent_attackspeed,
+    }
+    winner, loser = and_the_winner_is(me, opponent)
+    db.update_data(
+        conn,
+        "UPDATE users SET gold = gold + %s WHERE user_id = %s",
+        (amount, winner["user_id"]),
+    )
+    db.update_data(
+        conn,
+        "UPDATE users SET gold = gold - %s WHERE user_id = %s",
+        (amount, loser["user_id"]),
+    )
+
+    if (
+        user_id == winner["user_id"]
+    ):  # if i am the winner then he lost the challenge (cuz he challenged)
+        result = "lost"
+    else:
+        result = "won"
+
+    db.update_data(
+        conn,
+        "UPDATE challenges SET status = %s WHERE challenge_id = %s",
+        (result, challenge_id),
+    )
+    print(winner["user_id"], loser["user_id"])
+    data = {
+        "INSERT INTO history (user_id, username, opponent, time_of_day, date_of_year, exchange, result) VALUES (%s, %s, %s, %s, %s, %s, %s)": [
+            (
+                int(winner["user_id"]),
+                winner["username"],
+                loser["username"],
+                current_time,
+                current_date,
+                amount,
+                "won",
+            ),
+            (
+                int(loser["user_id"]),
+                loser["username"],
+                winner["username"],
+                current_time,
+                current_date,
+                -amount,
+                "lost",
+            ),
+        ]
+    }
+    table = "history"
+    db.insert_data(conn, table, data)
+
+    return redirect("/index")
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -512,11 +698,12 @@ def login():
                 f"SELECT user_id from users where username = %s AND password = %s",
                 (username, hash),
             )
-            if user_id == None:
+            if user_id == None or user_id == []:
                 return render_template(
                     "Apology.html", message="Username/ Password doesn't match"
                 )
             else:
+                print(user_id)
                 session["user"] = user_id[0][0]
                 history = get_history(
                     db.select_data(

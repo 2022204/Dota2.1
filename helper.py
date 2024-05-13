@@ -179,7 +179,7 @@ def get_history(history_list):
             'username': item[2],
             'opponent': item[3].capitalize(),  
             'date': str(item[5]),  
-            'time': item[4].strftime('%H:%M'),  
+            'time': item[4], 
             'result': item[7],
             'exchange': item[6]
         }
