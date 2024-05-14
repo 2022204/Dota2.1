@@ -1,2 +1,2 @@
-# Dota2.1
-God have mercy...
+### Dota2.1
+Lord have mercy on us
