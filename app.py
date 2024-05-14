@@ -64,9 +64,9 @@ def handle_trade():
                 (offerer_user_id, hero_id),
             )
             if not not_sold:
-                db.update_data(
+                db.delete_data(
                     conn,
-                    f"UPDATE tradeOffers SET status = 'accepted' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
+                    f"DELETE FROM tradeOffers WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
                     (offerer_user_id, hero_id, user_id),
                 )
                 return render_template(
@@ -132,7 +132,7 @@ def handle_trade():
                 f"UPDATE tradeOffers SET status = 'rejected' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
                 (user_id_offer, hero_id, user_id),
             )
-
+            
         return redirect("/index")
 
     elif request.method == "GET":
@@ -220,7 +220,7 @@ def fight():
 
             data = {
                 "INSERT INTO challenges (challenger_id, hero_id, defender_id, gold, status) VALUES (%s, %s, %s,%s,%s)": [
-                    (user_id, hero_id, defender_id, gold, "pending")
+                    (user_id, hero_id, defender_id, gold, 'pending')
                 ]
             }
             table = "challenges"
@@ -410,7 +410,6 @@ def fight():
                 )
             )
         )
-        print(my_challenges)
         return render_template(
             "fight.html",
             users=users,
@@ -421,13 +420,13 @@ def fight():
         )
 
 
-@app.after_request
-def after_request(response):
-    """Ensure responses aren't cached"""
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
+# @app.after_request
+# def after_request(response):
+#     """Ensure responses aren't cached"""
+#     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+#     response.headers["Expires"] = 0
+#     response.headers["Pragma"] = "no-cache"
+#     return response
 
 
 @app.route("/fighting", methods=["POST"])
@@ -713,7 +712,6 @@ def npc():
             conn, f"SELECT gold FROM users WHERE user_id = %s", (user_id,)
         )[0][0]
         npcs = get_npc(db.select_data(conn, f"SELECT * FROM npc"))
-        print(cash)
         return render_template("npc.html", npcs=npcs, gold=cash)
     elif request.method == "POST":
         gold = int(request.form["gold"])
@@ -784,7 +782,7 @@ def register():
 def index():
     """First page"""
     if "user" not in session or not session.get("user"):
-        return redirect("/login")
+        return redirect("/")
 
     user_id = session["user"]
 

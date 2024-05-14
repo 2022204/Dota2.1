@@ -93,7 +93,6 @@ def delete_data(conn, query, values):
 
 def select_data(conn, query, params=None):
     try:
-        # Select data from the database
         cur = conn.cursor()
         if params:
             cur.execute(query, params)
