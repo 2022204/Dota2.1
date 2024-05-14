@@ -587,7 +587,7 @@ def buy_item():
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
         )[0][0]
         if cash < cost:
-            return render_template("Apology.html", messages="NOT ENOUGH CASH!!!")
+            return render_template("Apology.html", message="NOT ENOUGH CASH!!!")
 
         cash -= cost
 
