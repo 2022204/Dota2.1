@@ -16,7 +16,6 @@ import json
 from datetime import datetime
 
 from flask_session import Session
-from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
 import database_updated_file as db
 import os
@@ -31,15 +30,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"]
 Session(app)
-socketio = SocketIO(app)
-messages = []
 
-
-@socketio.on("message")
-def handleMsg(msg):
-    print("Message: " + msg)
-    send(msg, broadcast=True)
-    messages.append(msg)
 
 
 @app.route("/trade", methods=["GET", "POST"])
@@ -90,7 +81,6 @@ def handle_trade():
                 )""",
                 (user_id, hero_id),
             )[0][0]
-            print(have_hero)
             if have_hero:
                 return render_template(
                     "Apology.html",
@@ -223,7 +213,6 @@ def fight():
             items = request.form.getlist("items[]")
             defender_id = request.form["user"]
             gold = int(request.form["gold"])
-
             if gold > cash:
                 return render_template(
                     "Apology.html", message="You don't have enough gold"
@@ -236,7 +225,7 @@ def fight():
 
             data = {
                 "INSERT INTO challenges (challenger_id, hero_id, defender_id, gold, status) VALUES (%s, %s, %s,%s,%s)": [
-                    (user_id, hero_id, defender_id, gold, "pending")
+                    (user_id, hero_id, defender_id, gold, 'pending')
                 ]
             }
             table = "challenges"
@@ -421,7 +410,7 @@ def fight():
             JOIN 
                 items AS I ON ci.item_id = I.item_id
             WHERE 
-                c.defender_id = %s AND c.status = pending""",
+                c.defender_id = %s AND c.status = 'pending'""",
                     (user_id,),
                 )
             )
@@ -515,7 +504,6 @@ def fighting():
         "UPDATE challenges SET status = %s WHERE challenge_id = %s",
         (result, challenge_id),
     )
-    print(winner["user_id"], loser["user_id"])
     data = {
         "INSERT INTO history (user_id, username, opponent, time_of_day, date_of_year, exchange, result) VALUES (%s, %s, %s, %s, %s, %s, %s)": [
             (
@@ -703,7 +691,6 @@ def login():
                     "Apology.html", message="Username/ Password doesn't match"
                 )
             else:
-                print(user_id)
                 session["user"] = user_id[0][0]
                 history = get_history(
                     db.select_data(
@@ -753,7 +740,7 @@ def register():
 
             data = {
                 "INSERT INTO users (username, password, gold) VALUES (%s, %s, %s)": [
-                    (username, hash, 1000)
+                    (username, hash, 1501)
                 ]
             }
             table = "users"
@@ -763,11 +750,11 @@ def register():
             row = db.select_data(
                 conn,
                 f"SELECT user_id FROM users where username = %s AND password = %s",
-                (username, password),
+                (username, hash),
             )
             session["user"] = row[0][0]
 
-            return render_template("index.html", username=username, duels=[])
+            return render_template("index.html", username=username, duels=[], gold = 1501)
 
 
 @app.route("/index")
@@ -799,4 +786,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

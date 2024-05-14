@@ -36,10 +36,6 @@
                         <input type="hidden" name="hero_id" value="{{ hero.hero_id }}">
                         <button type="submit" class="sell-button">Buy for {{hero.cost}} only</button>
                     </form>
-                    <form action="/details" method="post">
-                        <input type="hidden" name="hero_detail" value="{{hero.hero_id}}">
-                        <button type="submit" class="detail-button">View Details</button>
-                    </form>
                 </td>
             </tr>
         {% endfor %}
