@@ -70,7 +70,7 @@ def handle_trade():
                     (offerer_user_id, hero_id, user_id),
                 )
                 return render_template(
-                    "Apology.html", message="Sorry. This hero is NO longer available.", gold = cash
+                    "Apology.html", message="Sorry. This hero is NO longer available."
                 )
             have_hero = db.select_data(
                 conn,
@@ -84,14 +84,14 @@ def handle_trade():
             if have_hero:
                 return render_template(
                     "Apology.html",
-                    message="You already have this hero. Can't buy multiple heros",gold = cash
+                    message="You already have this hero. Can't buy multiple heros",
                 )
 
             cash = db.select_data(
                 conn, f"SELECT gold from users where user_id = %s", (user_id,)
             )[0][0]
             if cash < cost:
-                return render_template("Apology.html", message="NOT ENOUGH CASH!!!", gold = cash)
+                return render_template("Apology.html", messages="NOT ENOUGH CASH!!!")
 
             db.update_data(
                 conn,
@@ -210,12 +210,12 @@ def fight():
             gold = int(request.form["gold"])
             if gold > cash:
                 return render_template(
-                    "Apology.html", message="You don't have enough gold", gold = cash
+                    "Apology.html", message="You don't have enough gold"
                 )
 
             if len(items) > 3:
                 return render_template(
-                    "Apology.html", message="Only up to 3 items are allowed", gold = cash
+                    "Apology.html", message="Only up to 3 items are allowed"
                 )
 
             data = {
@@ -276,12 +276,12 @@ def fight():
                 )
                 return render_template(
                     "Apology.html",
-                    message="Challenge no longer available. Request declined", gold = cash
+                    message="Challenge no longer available. Request declined",
                 )
             elif cash < gold:
                 return render_template(
                     "Apology.html",
-                    message="You don't have enough money for this challenge",gold = cash
+                    message="You don't have enough money for this challenge",
                 )
 
             my_hero = request.form["hero"]
@@ -456,14 +456,7 @@ def fighting():
 
     challenge_id = form_data.get("challenge_id")
     amount = int(form_data.get("win_amount"))
-    is_available = db.select_data(conn, f"""SELECT EXISTS (
-                SELECT 1
-                FROM challenges
-                WHERE challenge_id = %s AND status = 'pending'
-                )""", (challenge_id, ))[0][0]
-    
-    if not is_available:
-        return redirect('/index')
+
     me = {
         "user_id": me_user_id,
         "username": me_username,
@@ -495,11 +488,11 @@ def fighting():
     )
 
     if (
-        me["user_id"] == winner["user_id"]
-    ): 
-        result = 'lost'
+        user_id == winner["user_id"]
+    ):  # if i am the winner then he lost the challenge (cuz he challenged)
+        result = "lost"
     else:
-        result = 'won'
+        result = "won"
 
     db.update_data(
         conn,
@@ -594,7 +587,7 @@ def buy_item():
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
         )[0][0]
         if cash < cost:
-            return render_template("Apology.html", message="NOT ENOUGH CASH!!!", gold = cash)
+            return render_template("Apology.html", message="NOT ENOUGH CASH!!!")
 
         cash -= cost
 
@@ -641,7 +634,7 @@ def buy_hero():
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
         )[0][0]
         if cash < cost:
-            return render_template("Apology.html", message="NOT ENOUGH CASH!!!", gold = cash)
+            return render_template("Apology.html", messages="NOT ENOUGH CASH!!!")
 
         cash -= cost
 
@@ -678,9 +671,9 @@ def login():
         password = request.form.get("password")
 
         if not username:
-            return render_template("Apology_main.html", message="Must enter username")
+            return render_template("Apology.html", message="Must enter username")
         elif not password:
-            return render_template("Apology_main.html", message="Must enter Password")
+            return render_template("Apology.html", message="Must enter Password")
         else:
             hash = hashed_password(password)
             user_id = db.select_data(
@@ -690,7 +683,7 @@ def login():
             )
             if user_id == None or user_id == []:
                 return render_template(
-                    "Apology_main.html", message="Username/ Password doesn't match"
+                    "Apology.html", message="Username/ Password doesn't match"
                 )
             else:
                 session["user"] = user_id[0][0]
@@ -737,13 +730,15 @@ def register():
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
         if not username:
-            return render_template("Apology_main.html", message="Must enter username")
+            return render_template("Apology.html", message="Must enter username")
         elif not password:
-            return render_template("Apology_main.html", message="Must enter Password")
+            return render_template("Apology.html", message="Must enter Password")
         elif not confirmation:
-            return render_template("Apology_main.html", message="Must Enter confirmation password")
+            return render_template(
+                "Apology.html", message="Must Enter confirmation password"
+            )
         elif password != confirmation:
-            return render_template("Apology_main.html", message="Passwords Don't match")
+            return render_template("Apology.html", message="Passwords Don't match")
         else:
             hash = hashed_password(password)
 
@@ -758,7 +753,7 @@ def register():
             )[0][0]
             if exists:
                 return render_template(
-                    "Apology_main.html", message="This username already exists"
+                    "Apology.html", message="This username already exists"
                 )
 
             data = {

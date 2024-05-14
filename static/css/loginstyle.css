@@ -790,3 +790,9 @@ button:hover {
     justify-content: center;
     align-items: center;
 }
+
+.gold-box{
+    color: gold;
+    font-weight: bold;
+    text-decoration: underline;
+}
