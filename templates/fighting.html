@@ -3,42 +3,46 @@
 {% block title %} Fighting {% endblock %}
 {% block gold %}{{ gold }} {% endblock %}
 {% block body %}
-<form action="/fighting" method="post">
-    <div style="display: flex; justify-content: space-between;">
-        <div style="width: 45%; border: 1px solid black; padding: 10px;">
-            <h2>{{ me.username }}</h2>
-            <p>Hero Name: {{ me.hero_name }}</p>
-            <p>Health: {{ me.health }}</p>
-            <p>Armor: {{ me.armor }}</p>
-            <p>Damage: {{ me.damage }}</p>
-            <p>Attack Speed: {{ me.attackspeed }}</p>
-            <input type="hidden" name="me_user_id" value="{{ me.user_id }}">
-            <input type="hidden" name="me_username" value="{{ me.username }}">
-            <input type="hidden" name="me_hero_name" value="{{ me.hero_name }}">
-            <input type="hidden" name="me_health" value="{{ me.health }}">
-            <input type="hidden" name="me_armor" value="{{ me.armor }}">
-            <input type="hidden" name="me_damage" value="{{ me.damage }}">
-            <input type="hidden" name="me_attackspeed" value="{{ me.attackspeed }}">
-        </div>
-        <div style="width: 45%; border: 1px solid black; padding: 10px;">
-            <h2>{{ opponent.username }}</h2>
-            <p>Hero Name: {{ opponent.hero_name }}</p>
-            <p>Health: {{ opponent.health }}</p>
-            <p>Armor: {{ opponent.armor }}</p>
-            <p>Damage: {{ opponent.damage }}</p>
-            <p>Attack Speed: {{ opponent.attackspeed }}</p>
-            <input type="hidden" name="opponent_user_id" value="{{ opponent.user_id }}">
-            <input type="hidden" name="opponent_username" value="{{ opponent.username }}">
-            <input type="hidden" name="opponent_hero_name" value="{{ opponent.hero_name }}">
-            <input type="hidden" name="opponent_health" value="{{ opponent.health }}">
-            <input type="hidden" name="opponent_armor" value="{{ opponent.armor }}">
-            <input type="hidden" name="opponent_damage" value="{{ opponent.damage }}">
-            <input type="hidden" name="opponent_attackspeed" value="{{ opponent.attackspeed }}">
-        </div>
-        <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
-        <input type="hidden" name="win_amount" value="{{ win_amount }}">
+<div class="general">
+    <div class="container2">
+        <form action="/fighting" method="post">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 45%; border: 1px solid black; padding: 10px;">
+                    <h2>{{ me.username }}</h2>
+                    <p>Hero Name: {{ me.hero_name }}</p>
+                    <p>Health: {{ me.health }}</p>
+                    <p>Armor: {{ me.armor }}</p>
+                    <p>Damage: {{ me.damage }}</p>
+                    <p>Attack Speed: {{ me.attackspeed }}</p>
+                    <input type="hidden" name="me_user_id" value="{{ me.user_id }}">
+                    <input type="hidden" name="me_username" value="{{ me.username }}">
+                    <input type="hidden" name="me_hero_name" value="{{ me.hero_name }}">
+                    <input type="hidden" name="me_health" value="{{ me.health }}">
+                    <input type="hidden" name="me_armor" value="{{ me.armor }}">
+                    <input type="hidden" name="me_damage" value="{{ me.damage }}">
+                    <input type="hidden" name="me_attackspeed" value="{{ me.attackspeed }}">
+                </div>
+                <div style="width: 45%; border: 1px solid black; padding: 10px;">
+                    <h2>{{ opponent.username }}</h2>
+                    <p>Hero Name: {{ opponent.hero_name }}</p>
+                    <p>Health: {{ opponent.health }}</p>
+                    <p>Armor: {{ opponent.armor }}</p>
+                    <p>Damage: {{ opponent.damage }}</p>
+                    <p>Attack Speed: {{ opponent.attackspeed }}</p>
+                    <input type="hidden" name="opponent_user_id" value="{{ opponent.user_id }}">
+                    <input type="hidden" name="opponent_username" value="{{ opponent.username }}">
+                    <input type="hidden" name="opponent_hero_name" value="{{ opponent.hero_name }}">
+                    <input type="hidden" name="opponent_health" value="{{ opponent.health }}">
+                    <input type="hidden" name="opponent_armor" value="{{ opponent.armor }}">
+                    <input type="hidden" name="opponent_damage" value="{{ opponent.damage }}">
+                    <input type="hidden" name="opponent_attackspeed" value="{{ opponent.attackspeed }}">
+                </div>
+                <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
+                <input type="hidden" name="win_amount" value="{{ win_amount }}">
+            </div>
+            <h2>WINNING AMOUNT {{win_amount}}</h2>
+            <button type="submit">Start Fight</button>
+        </form>
     </div>
-    <h2>WINNING AMOUNT {{win_amount}}</h2>
-    <button type="submit">Start Fight</button>
-</form>
+</div>
 {% endblock %}

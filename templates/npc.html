@@ -2,33 +2,50 @@
 
 {% block title %} NPC consumption{% endblock %}
 {% block gold %}{{gold}}{% endblock %}
-{% block body %}
-    <h1>List of NPCs</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Gold</th>
-                <th>Consumption Time</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for npc in npcs %}
-            <tr>
-                <td>{{ npc.name }}</td>
-                <td>{{ npc.gold }}</td>
-                <td>{{ npc.time }}</td>
-                <td>
-                    <form method="POST" action="/npc">
-                        <input type="hidden" name="gold" value="{{ npc.gold }}">
-                        <input type="hidden" name="time" value="{{ npc.time }}">
-                        <button type="submit">Consume</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block styles %}
+<style>
+    .centered-content {
+        text-align: center;
+    }
 
+    table {
+        background-color: white;
+        color: white;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="general">
+    <div class="container2">
+        <div class=centered-content>
+            <h1>List of NPCs</h1>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gold</th>
+                    <th>Consumption Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for npc in npcs %}
+                <tr>
+                    <td>{{ npc.name }}</td>
+                    <td>{{ npc.gold }}</td>
+                    <td>{{ npc.time }}</td>
+                    <td>
+                        <form method="POST" action="/npc">
+                            <input type="hidden" name="gold" value="{{ npc.gold }}">
+                            <input type="hidden" name="time" value="{{ npc.time }}">
+                            <button type="submit">Consume</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

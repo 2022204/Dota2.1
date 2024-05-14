@@ -10,7 +10,7 @@ from helper import (
     get_users,
     get_challenges,
     merge_items_by_challenge,
-    get_npc
+    get_npc,
 )
 from fight import and_the_winner_is
 import json
@@ -31,7 +31,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"]
 Session(app)
-
 
 
 @app.route("/trade", methods=["GET", "POST"])
@@ -121,11 +120,6 @@ def handle_trade():
             db.update_data(
                 conn,
                 f"UPDATE tradeOffers SET status = 'accepted' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
-                (offerer_user_id, hero_id, user_id),
-            )
-            db.update_data(
-                conn,
-                f"UPDATE tradeOffers SET status = 'sold' WHERE user_id = %s AND hero_id = %s AND offered_to != %s AND status != 'accepted'",
                 (offerer_user_id, hero_id, user_id),
             )
 
@@ -226,7 +220,7 @@ def fight():
 
             data = {
                 "INSERT INTO challenges (challenger_id, hero_id, defender_id, gold, status) VALUES (%s, %s, %s,%s,%s)": [
-                    (user_id, hero_id, defender_id, gold, 'pending')
+                    (user_id, hero_id, defender_id, gold, "pending")
                 ]
             }
             table = "challenges"
@@ -234,7 +228,7 @@ def fight():
 
             challenge_id = db.select_data(
                 conn,
-                f"SELECT challenge_id FROM challenges WHERE challenger_id = %s AND hero_id = %s AND defender_id = %s AND status = 'pending'",
+                f"SELECT challenge_id FROM challenges WHERE challenger_id = %s AND hero_id = %s AND defender_id = %s AND status = 'pending' AND challenge_id NOT IN (SELECT challenge_id FROM challenge_items)",
                 (user_id, hero_id, defender_id),
             )[0][0]
 
@@ -702,22 +696,29 @@ def login():
                 )
 
                 return redirect("/index")
-@app.route('/npc', methods=['GET', 'POST'])
+
+
+@app.route("/npc", methods=["GET", "POST"])
 def npc():
-    user_id = session['user']
-    if request.method == 'GET':
-        cash = db.select_data(conn, f"SELECT gold FROM users WHERE user_id = %s", (user_id, ))[0][0]
+    user_id = session["user"]
+    if request.method == "GET":
+        cash = db.select_data(
+            conn, f"SELECT gold FROM users WHERE user_id = %s", (user_id,)
+        )[0][0]
         npcs = get_npc(db.select_data(conn, f"SELECT * FROM npc"))
         print(cash)
-        return render_template('npc.html', npcs=npcs, gold = cash)
-    elif request.method == 'POST':
-        gold = int(request.form['gold'])
-        consumption_time = int(request.form['time'])
+        return render_template("npc.html", npcs=npcs, gold=cash)
+    elif request.method == "POST":
+        gold = int(request.form["gold"])
+        consumption_time = int(request.form["time"])
         time.sleep(consumption_time)
-        db.update_data(conn, "UPDATE users SET gold = gold + %s WHERE user_id = %s", (gold, user_id))
-        
-        return redirect('/index')
-    
+        db.update_data(
+            conn,
+            "UPDATE users SET gold = gold + %s WHERE user_id = %s",
+            (gold, user_id),
+        )
+
+        return redirect("/index")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -771,7 +772,7 @@ def register():
             )
             session["user"] = row[0][0]
 
-            return render_template("index.html", username=username, duels=[], gold = 1501)
+            return render_template("index.html", username=username, duels=[], gold=1501)
 
 
 @app.route("/index")

@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Dota V.02</title>
-        <link rel="stylesheet" href="/static/css/loginstyle.css">
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Galindo&display=swap" rel="stylesheet">
-        <title>{% block title %}{% endblock %}</title>
-    </head>
 
-    <body>
-            <div class="navbar">
-                <nav>
-                    <h2 class="logo"><a href="/">Dota <span>V.02</span></a></h2>
-                    <ul class="navbar-nav me-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/buy_hero">Buy Hero</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/buy_item">Buy item</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/sell">Sell items</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/fight">Fight</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/trade">Trade hero</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/npc">Earn Gold</a></li>
+<head>
+    <title>Dota V.02</title>
+    <link rel="stylesheet" href="/static/css/loginstyle.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Galindo&display=swap" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<div class="navbar">
+    <nav>
+        <h2 class="logo"><a href="/">Dota <span>V.02</span></a></h2>
+        <ul class="navbar-nav me-auto mt-2">
+            <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/buy_hero">Buy Hero</a></li>
+            <li class="nav-item"><a class="nav-link" href="/buy_item">Buy item</a></li>
+            <li class="nav-item"><a class="nav-link" href="/sell">Sell items</a></li>
+            <li class="nav-item"><a class="nav-link" href="/fight">Fight</a></li>
+            <li class="nav-item"><a class="nav-link" href="/trade">Trade hero</a></li>
+            <li class="nav-item"><a class="nav-link" href="/npc">Earn Gold</a></li>
 
-                    </ul>
-                    <div class="gold-box">Gold: {% block gold %}{% endblock %}</div>
-                    <form action="/logout" method="post">
-                        <button type="submit" class="login">Logout</button>
-                    </form> 
-                </nav>
-            </div>
-            {% block body %}{% endblock %}         
-	
- </body>
+        </ul>
+        <div class="gold-box">Gold: {% block gold %}{% endblock %}</div>
+        <form action="/logout" method="post">
+            <button type="submit" class="login">Logout</button>
+        </form>
+    </nav>
+</div>
+
+<body>{% block body %}{% endblock %}</body>
+
 </html>
