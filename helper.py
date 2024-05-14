@@ -185,6 +185,20 @@ def get_history(history_list):
         }
         duels.append(duel_dict)
     return duels
+
+def get_npc(npclist):
+    npc = []
+    if npclist == None:
+        return []
+    for i in npclist:
+        npc_dict = {}
+        npc_dict['name'] = i[2]
+        npc_dict['gold'] = i[1]
+        npc_dict['time'] = i[3]
+
+        npc.append(npc_dict)
+
+    return npc
 def hashed_password(password):
     """This will encrypt user's password"""
     mapped = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m']

@@ -10,11 +10,12 @@ from helper import (
     get_users,
     get_challenges,
     merge_items_by_challenge,
+    get_npc
 )
 from fight import and_the_winner_is
 import json
 from datetime import datetime
-
+import time
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 import database_updated_file as db
@@ -701,6 +702,22 @@ def login():
                 )
 
                 return redirect("/index")
+@app.route('/npc', methods=['GET', 'POST'])
+def npc():
+    user_id = session['user']
+    if request.method == 'GET':
+        cash = db.select_data(conn, f"SELECT gold FROM users WHERE user_id = %s", (user_id, ))[0][0]
+        npcs = get_npc(db.select_data(conn, f"SELECT * FROM npc"))
+        print(cash)
+        return render_template('npc.html', npcs=npcs, gold = cash)
+    elif request.method == 'POST':
+        gold = int(request.form['gold'])
+        consumption_time = int(request.form['time'])
+        time.sleep(consumption_time)
+        db.update_data(conn, "UPDATE users SET gold = gold + %s WHERE user_id = %s", (gold, user_id))
+        
+        return redirect('/index')
+    
 
 
 @app.route("/register", methods=["GET", "POST"])
