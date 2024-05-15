@@ -36,6 +36,9 @@ Session(app)
 @app.route("/trade", methods=["GET", "POST"])
 def handle_trade():
     user_id = session["user"]
+    cash = db.select_data(
+                conn, f"SELECT gold from users where user_id = %s", (user_id,)
+            )[0][0]
     if request.method == "POST":
         action = request.form.get("action")
 
@@ -87,9 +90,6 @@ def handle_trade():
                     message="You already have this hero. Can't buy multiple heros",gold = cash
                 )
 
-            cash = db.select_data(
-                conn, f"SELECT gold from users where user_id = %s", (user_id,)
-            )[0][0]
             if cash < cost:
                 return render_template("Apology.html", message="NOT ENOUGH CASH!!!", gold = cash)
 
@@ -421,10 +421,12 @@ def fight():
 
 
 
-
 @app.route("/fighting", methods=["POST"])
 def fighting():
     user_id = session["user"]
+    cash = db.select_data(
+                conn, f"SELECT gold from users where user_id = %s", (user_id,)
+            )[0][0]
     current_datetime = datetime.now()
     current_date = current_datetime.strftime("%Y-%m-%d")
     current_time = current_datetime.strftime("%H:%M:%S")
@@ -572,6 +574,9 @@ def buy_item():
             (user_id,),
         )
     )
+    cash = db.select_data(
+                conn, f"SELECT gold from users where user_id = %s", (user_id,)
+            )[0][0]
     if request.method == "GET":
         cash = db.select_data(
             conn, f"SELECT gold from users where user_id = %s", (user_id,)
@@ -618,11 +623,10 @@ def buy_hero():
             (user_id,),
         )
     )
-
+    cash = db.select_data(
+                conn, f"SELECT gold from users where user_id = %s", (user_id,)
+            )[0][0]
     if request.method == "GET":
-        cash = db.select_data(
-            conn, f"SELECT gold from users where user_id = %s", (user_id,)
-        )[0][0]
         return render_template("buy_hero.html", heroes=hero_list, gold=cash)
     else:
         hero_id = int(request.form.get("hero_id"))
