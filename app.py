@@ -132,7 +132,7 @@ def handle_trade():
                 f"UPDATE tradeOffers SET status = 'rejected' WHERE user_id = %s AND hero_id = %s AND offered_to = %s AND status = 'pending'",
                 (user_id_offer, hero_id, user_id),
             )
-            
+
         return redirect("/index")
 
     elif request.method == "GET":

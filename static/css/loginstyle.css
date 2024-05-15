@@ -499,7 +499,12 @@ button:hover {
 .hero-image {
     flex: 1; /* Make hero-image flexible to fill available space */
 }
-  
+.gold-box{
+    color: gold;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .info-box h1 {
     font-size: 24px; /* Set heading size */
     margin-bottom: 10px; /* Add margin for spacing */
